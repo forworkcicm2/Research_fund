@@ -599,8 +599,8 @@ var FUNDFY=(function(){
 var COMLO=COM.filter(function(r){return r.fy}).reduce(function(m,r){return Math.min(m,r.fy)},FUNDFY);
 var FYL={carry:'ยอดยกมา ปี '+(FUNDFY-1),income:'รายรับจริง ปี '+FUNDFY,spent:'รายจ่ายจริง ปี '+FUNDFY,fund:'เงินสะสมกองทุน ปี '+FUNDFY,commit:'ภาระผูกพัน ตั้งแต่ปี '+COMLO+'-'+FUNDFY};
 function LB(l){return FYL[l]||F(l).label}
-document.title='Research fund — รายงานกองทุนวิจัยปี ';
-(function(){var e=document.querySelector('#brand-sub');if(e)e.textContent='กองทุนวิจัย · รายงานกองทุนวิจัยปี '})();
+document.title='Research fund — รายงานกองทุนวิจัย';
+(function(){var e=document.querySelector('#brand-sub');if(e)e.textContent='กองทุนวิจัย · รายงานกองทุนวิจัย'})();
 var MET=(function(){
   var term=COM.filter(function(r){return r.status==='ยุติทุน'});
   var dups=COM.filter(function(r){return r.dup_extra});
