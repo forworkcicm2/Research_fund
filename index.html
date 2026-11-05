@@ -237,24 +237,57 @@
   /* เลขปีบนแกนใช้ความกว้างตัวเลขเท่ากัน จะได้เรียงตรงกัน */
   .apexcharts-yaxis-label, .apexcharts-xaxis-label { font-variant-numeric: tabular-nums; }
 
-  /* ===== รอบจัดหน้าบนใหม่: การ์ดเล็กลง · แถบสถานะ · ป้ายสถานะ ===== */
-  .hero { padding: 1.25rem 1.25rem 1.1rem; }
-  @media (min-width: 640px) { .hero { padding: 1.5rem 1.75rem 1.25rem; } }
-  .hero .hero-fig { font-size: clamp(2.1rem, 8.4vw, 3.5rem); margin-top: .25rem; }
+  /* ===== รอบจัดหน้าบนใหม่ (กะทัดรัด): การ์ดเล็กลง · แถวบนสามใบ · แถบสถานะ · ป้ายสถานะ ===== */
+  .cmp { border-radius: 20px; }                         /* .glass ใช้มุมโค้ง 28px ใหญ่เกินสำหรับการ์ดเล็ก */
+  .card-t { font-size: 1rem; }
+  .card-s { font-size: .8125rem; }
+
+  .hdr { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1rem; padding: .7rem 1rem; }
+  @media (min-width: 640px) { .hdr { padding: .8rem 1.35rem; } }
+  .hdr-s { font-size: .75rem; line-height: 1.5; color: var(--ink2); }
+  .hdr-t { font-size: 1.25rem; font-weight: 700; line-height: 1.3; }
+  @media (min-width: 640px) { .hdr-t { font-size: 1.5rem; } }
+  .hdr-r { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+  .hdr .pill { padding: .3rem .75rem; font-size: .8125rem; line-height: 1.4; }
+  .hdr .btn { padding: .3rem .85rem; font-size: .8125rem; }
+  .hdr > div:first-child { flex: 1 1 18rem; }
+  @media (max-width: 639px) {                        /* มือถือ: สถานะกับปุ่มรีเฟรชอยู่แถวเดียวกัน */
+    .hdr-r { width: 100%; flex-wrap: nowrap; }
+    .hdr .pill { flex: 1 1 auto; min-width: 0; border-radius: 14px; font-size: .75rem; }
+    .hdr .btn { flex: none; }
+  }
+
+  .top { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; }
+  .top > .hero { grid-column: 1 / -1; }
+  @media (min-width: 1024px) {
+    .top { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr); gap: .75rem; }
+    .top > .hero { grid-column: auto; }
+  }
+
+  .hero { padding: .85rem 1rem; }
+  @media (min-width: 640px) { .hero { padding: 1rem 1.25rem; } }
+  .hero-l { font-size: .9375rem; font-weight: 500; color: var(--ink2); }
+  .hero .hero-fig { font-size: clamp(1.9rem, 8vw, 2.75rem); margin-top: .1rem; line-height: 1.1; }
+  .hero-sub { display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem .9rem; margin-top: .25rem; }
   .hero-eq {
-    width: fit-content; max-width: 100%; margin-top: .35rem; font-size: 1rem; font-weight: 500; color: var(--ink);
+    width: fit-content; max-width: 100%; font-size: .9375rem; font-weight: 500; color: var(--ink);
     cursor: help; text-decoration: underline dotted rgba(20, 18, 31, .38); text-underline-offset: 4px;
   }
-  .hero-asof { margin-top: .2rem; font-size: .8125rem; line-height: 1.5; color: var(--ink2); }
-  .hero .formula { margin-top: .9rem; padding-top: .6rem; }
+  .hero-asof { font-size: .75rem; line-height: 1.5; color: var(--ink2); }
+
+  /* ปุ่มพับ "ดูวิธีคำนวณ": ปิดอยู่เป็นแค่บรรทัดข้อความ เปิดแล้วค่อยเป็นการ์ด */
+  .formula.fstrip { margin-top: .4rem; padding: .1rem .5rem; border: 1px solid transparent; border-radius: 14px; }
+  .formula.fstrip > summary { font-size: .8125rem; color: var(--ink2); padding: .15rem 0; }
+  .formula.fstrip[open] { padding: .5rem .9rem .7rem; background: rgba(255, 255, 255, .72); border-color: rgba(70, 50, 120, .14); }
+  .formula.fstrip[open] > summary { color: var(--ink); }
 
   .badge {
-    display: inline-flex; align-items: center; gap: .4rem; padding: .12rem .75rem .12rem .3rem; border-radius: 999px;
+    display: inline-flex; align-items: center; gap: .35rem; padding: .08rem .7rem .08rem .25rem; border-radius: 999px;
     font-size: .8125rem; font-weight: 500; line-height: 1.5; border: 1px solid transparent; cursor: help;
   }
   .badge .b-ic {
-    flex: none; width: 17px; height: 17px; border-radius: 50%; display: inline-grid; place-items: center;
-    font-size: .72rem; font-weight: 700; line-height: 1;
+    flex: none; width: 16px; height: 16px; border-radius: 50%; display: inline-grid; place-items: center;
+    font-size: .7rem; font-weight: 700; line-height: 1;
   }
   .badge.ok { background: #dff5ea; color: #0a3a29; border-color: #93d6b8; }
   .badge.ok .b-ic { background: #1baf7a; color: #0b0b0b; }
@@ -263,22 +296,25 @@
   .badge.bad { background: #fde3e3; color: #6a1010; border-color: #eba0a0; }
   .badge.bad .b-ic { background: #d03b3b; color: #fff; }
 
-  .kpi { padding: .95rem 1.05rem; border-radius: 22px; }
-  @media (min-width: 640px) { .kpi { padding: 1.1rem 1.35rem; } }
-  .kpi-l { display: flex; align-items: center; font-size: .875rem; color: var(--ink2); }
-  .kpi-v { margin-top: .15rem; font-size: clamp(1.05rem, 4.5vw, 1.75rem); font-weight: 700; line-height: 1.2; font-variant-numeric: proportional-nums; }
+  .kpi { display: flex; flex-direction: column; justify-content: center; padding: .7rem .9rem; }
+  @media (min-width: 640px) { .kpi { padding: .85rem 1.15rem; } }
+  .kpi-l { display: flex; align-items: center; font-size: .8125rem; color: var(--ink2); }
+  .kpi-v { margin-top: .1rem; font-size: clamp(1rem, 4.3vw, 1.625rem); font-weight: 700; line-height: 1.2; font-variant-numeric: proportional-nums; }
   .kpi-v .cur { font-size: .62em; font-weight: 500; margin-right: .15em; color: var(--ink2); }
-  .kpi-s { margin-top: .2rem; font-size: .8125rem; line-height: 1.45; color: var(--ink2); }
+  .kpi-s { margin-top: .1rem; font-size: .75rem; line-height: 1.4; color: var(--ink2); }
 
-  .tile { padding: .8rem 1rem; border-radius: 20px; }
-  .tile-l { display: flex; align-items: center; font-size: .8125rem; color: var(--ink2); }
-  .tile .tile-v { margin-top: .1rem; font-size: clamp(1rem, 4.1vw, 1.4rem); }
-  .tile-s { margin-top: .1rem; font-size: .75rem; line-height: 1.4; color: var(--ink2); }
-  .sec-h { margin: 1.25rem 0 0; font-size: .875rem; font-weight: 500; color: var(--ink2); }
+  .tile { padding: .55rem .8rem; border-radius: 16px; }
+  .tile-l { display: flex; align-items: center; font-size: .75rem; color: var(--ink2); }
+  .tile .tile-v { margin-top: .05rem; font-size: clamp(.95rem, 3.9vw, 1.25rem); }
+  .tile-s { font-size: .6875rem; line-height: 1.4; color: var(--ink2); }
+  .sec-h { margin: .9rem 0 0; font-size: .8125rem; font-weight: 500; color: var(--ink2); }
+
+  .st-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 .75rem; }
+  .st-hint { margin-top: .4rem; font-size: .6875rem; line-height: 1.5; color: var(--ink2); }
 
   /* แถบสถานะแนวนอน: แต่ละช่วงเป็นปุ่ม ชี้/แตะแล้วเห็นจำนวนเงินจริง */
   .seg-wrap { position: relative; }
-  .seg { display: flex; gap: 2px; height: 32px; width: 100%; }
+  .seg { display: flex; gap: 2px; height: 28px; width: 100%; }
   .seg > button {
     flex: 1 1 0; min-width: 6px; display: flex; align-items: center; padding: 0 0 0 8px; border: 0; border-radius: 6px;
     font: inherit; font-size: .75rem; font-weight: 500; white-space: nowrap; text-align: left; overflow: hidden; cursor: pointer;
@@ -295,43 +331,56 @@
   .seg-tip .tt-h .key { margin-right: .45rem; }
   .seg-tip .tt-s { font-size: .8125rem; line-height: 1.45; color: var(--ink2); }
 
-  .legend2 { list-style: none; padding: 0; margin: .75rem 0 0; display: grid; gap: .1rem; }
+  /* รายการใต้แท่ง: จอกว้างแบ่งสองคอลัมน์ให้การ์ดเตี้ย (จำนวนแถว --rows ตั้งจาก JS) */
+  .legend2 { list-style: none; padding: 0; margin: .5rem 0 0; display: grid; gap: 0 1.5rem; }
+  @media (min-width: 720px) { .legend2 { grid-auto-flow: column; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(var(--rows, 3), auto); } }
   .lg-row {
-    display: grid; grid-template-columns: minmax(0, 1fr) auto 3.1rem .9rem; align-items: center; gap: .25rem .6rem;
-    width: 100%; padding: .4rem .55rem; border: 0; border-radius: 12px; background: transparent;
-    font: inherit; font-size: .875rem; line-height: 1.4; color: var(--ink); text-align: left;
+    display: grid; grid-template-columns: minmax(0, 1fr) auto 3rem .9rem; align-items: center; gap: .2rem .6rem;
+    width: 100%; padding: .22rem .45rem; border: 0; border-radius: 10px; background: transparent;
+    font: inherit; font-size: .8125rem; line-height: 1.4; color: var(--ink); text-align: left;
   }
   .lg-btn { cursor: pointer; transition: background .15s; }
   .lg-btn:hover { background: rgba(255, 255, 255, .85); }
   .lg-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
   .lg-n { display: flex; align-items: baseline; min-width: 0; }
-  .lg-n .key { flex: none; }
+  .lg-n .key { flex: none; margin-right: .45rem; }
   .lg-a { font-variant-numeric: tabular-nums; font-weight: 500; text-align: right; white-space: nowrap; }
   .lg-p { font-variant-numeric: tabular-nums; text-align: right; color: var(--ink2); white-space: nowrap; }
-  .lg-go { color: var(--ink2); font-size: 1.15rem; line-height: 1; text-align: right; }
-  .lg-empty { padding: .4rem .55rem; font-size: .875rem; color: var(--ink2); }
+  .lg-go { color: var(--ink2); font-size: 1.1rem; line-height: 1; text-align: right; }
+  .lg-empty { padding: .4rem .55rem; font-size: .8125rem; color: var(--ink2); }
   /* จอแคบ: ชื่อสถานะได้ทั้งบรรทัด จำนวนเงินกับร้อยละอยู่บรรทัดล่าง */
   @media (max-width: 480px) {
-    .lg-row { grid-template-columns: minmax(0, 1fr) auto .9rem; gap: .05rem .5rem; padding: .45rem .3rem; }
+    .lg-row { grid-template-columns: minmax(0, 1fr) auto .9rem; gap: 0 .5rem; padding: .25rem .25rem; }
     .lg-n { grid-column: 1 / -1; }
-    .lg-a { grid-column: 1; text-align: left; padding-left: calc(10px + .5rem); }
+    .lg-a { grid-column: 1; text-align: left; padding-left: calc(10px + .45rem); }
     .lg-p { grid-column: 2; }
     .lg-go { grid-column: 3; }
   }
+
+  /* คำเตือน: ข้อความกับป้ายผลกระทบ/ปุ่มอยู่บรรทัดเดียวกันเมื่อมีที่ */
+  .notice { padding: .45rem .8rem; border-radius: 14px; font-size: .8125rem; line-height: 1.5; gap: .6rem; }
+  .n-ic { width: 20px; height: 20px; font-size: .72rem; }
+  .n-body { display: flex; flex-wrap: wrap; align-items: center; gap: .2rem .8rem; }
+  .n-body > div:first-child { flex: 1 1 22rem; min-width: 0; }
+  .n-row { margin-top: 0; gap: .35rem .5rem; }
+  .n-impact { font-size: .75rem; padding: .08rem .55rem; }
+  .n-act { font-size: .75rem; padding: .2rem .7rem; }
+
+  .scope { padding: .4rem .9rem; border-radius: 14px; font-size: .75rem; gap: .1rem 1.4rem; }
 </style>
 </head>
 
 <body class="antialiased">
-<div class="mx-auto max-w-[1200px] px-4 py-6 sm:px-6 sm:py-10">
+<div class="mx-auto max-w-[1200px] px-4 py-4 sm:px-6 sm:py-6">
 
   <!-- หัวหน้า + สถานะการเชื่อมต่อ -->
-  <header class="glass flex flex-wrap items-center justify-between gap-4 px-6 py-5 sm:px-8">
-    <div>
-      <p class="text-sm text-[var(--ink2)]">รายงานกองทุนวิจัย · <span id="fy-label">ปีงบประมาณ —</span></p>
-      <h1 class="text-2xl font-bold sm:text-3xl">Research fund</h1>
-      <p id="src-line" class="mt-1 text-sm text-[var(--ink2)]">กำลังเชื่อมต่อแหล่งข้อมูล…</p>
+  <header class="glass cmp hdr">
+    <div class="min-w-0">
+      <p class="hdr-s">รายงานกองทุนวิจัย · <span id="fy-label">ปีงบประมาณ —</span></p>
+      <h1 class="hdr-t">Research fund</h1>
+      <p id="src-line" class="hdr-s">กำลังเชื่อมต่อแหล่งข้อมูล…</p>
     </div>
-    <div class="flex flex-wrap items-center gap-3">
+    <div class="hdr-r">
       <div class="pill" role="status" aria-live="polite">
         <span id="live-dot" class="dot"></span>
         <span id="live-text">กำลังเชื่อมต่อ…</span>
@@ -342,44 +391,46 @@
 
   <div id="status-banner" class="mt-4 grid gap-2"></div>
 
-  <!-- ตัวเลขหลัก เรียงตามความสำคัญ: เงินใช้ได้จริง > ภาระผูกพัน > เงินสะสมกองทุน > สถานะงบ > ลิงก์ดูรายการ -->
-  <section class="glass hero mt-3" aria-labelledby="hero-l">
-    <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
-      <p id="hero-l" class="text-base font-medium text-[var(--ink2)]">เงินที่ใช้ได้จริง</p>
-      <span id="hero-badge" class="badge" role="status" hidden><span class="b-ic" aria-hidden="true"></span><span class="b-tx"></span></span>
-    </div>
-    <p class="hero-fig"><span class="cur">฿</span><span id="hero-val">—</span></p>
-    <p id="hero-eq" class="hero-eq">เงินสะสม − ภาระผูกพัน</p>
-    <p id="hero-asof" class="hero-asof"></p>
-
-    <details id="formula" class="formula">
-      <summary>ดูวิธีคำนวณเงินที่ใช้ได้จริง ทีละขั้น</summary>
-      <div class="overflow-x-auto"><table id="formula-tbl" class="tbl fm"></table></div>
-    </details>
-  </section>
-
-  <section class="mt-3 grid grid-cols-2 gap-3" aria-label="ภาระผูกพันและเงินสะสมกองทุน">
-    <article id="kpi-commit" class="glass kpi">
+  <!-- ตัวเลขหลัก เรียงตามความสำคัญ: เงินใช้ได้จริง > ภาระผูกพัน > เงินสะสมกองทุน > สถานะงบ > ลิงก์ดูรายการ
+       จอกว้างวางสามใบในแถวเดียว (ซ้ายไปขวา) จอแคบ: การ์ดแรกเต็มแถว แล้วสองใบเล็กคู่กัน -->
+  <div class="top mt-3">
+    <section class="glass cmp hero" aria-labelledby="hero-l">
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <p id="hero-l" class="hero-l">เงินที่ใช้ได้จริง</p>
+        <span id="hero-badge" class="badge" role="status" hidden><span class="b-ic" aria-hidden="true"></span><span class="b-tx"></span></span>
+      </div>
+      <p class="hero-fig"><span class="cur">฿</span><span id="hero-val">—</span></p>
+      <div class="hero-sub">
+        <p id="hero-eq" class="hero-eq">เงินสะสม − ภาระผูกพัน</p>
+        <p id="hero-asof" class="hero-asof"></p>
+      </div>
+    </section>
+    <article id="kpi-commit" class="glass cmp kpi">
       <p class="kpi-l"><span class="key" style="background:var(--out)"></span>ภาระผูกพัน</p>
       <p class="kpi-v"><span class="cur">฿</span><span id="kpi-commit-v">—</span></p>
       <p id="kpi-commit-s" class="kpi-s"></p>
     </article>
-    <article id="kpi-fund" class="glass kpi">
+    <article id="kpi-fund" class="glass cmp kpi">
       <p class="kpi-l"><span id="kpi-fund-l">เงินสะสมกองทุน</span></p>
       <p class="kpi-v"><span class="cur">฿</span><span id="kpi-fund-v">—</span></p>
       <p id="kpi-fund-s" class="kpi-s"></p>
     </article>
-  </section>
+  </div>
 
-  <section class="glass mt-3 p-5 sm:p-6" aria-labelledby="st-title">
-    <h2 id="st-title" class="card-t">สถานะงบประมาณ</h2>
-    <p id="seg-title" class="card-s">เงินสะสมกองทุนแบ่งเป็น</p>
-    <div class="seg-wrap mt-3">
+  <details id="formula" class="formula fstrip">
+    <summary>ดูวิธีคำนวณเงินที่ใช้ได้จริง ทีละขั้น</summary>
+    <div class="overflow-x-auto"><table id="formula-tbl" class="tbl fm"></table></div>
+  </details>
+
+  <section class="glass cmp mt-3 p-4 sm:p-5" aria-labelledby="st-title">
+    <div class="st-head"><h2 id="st-title" class="card-t">สถานะงบประมาณ</h2>
+    <p id="seg-title" class="card-s">เงินสะสมกองทุนแบ่งเป็น</p></div>
+    <div class="seg-wrap mt-2">
       <div id="seg" class="seg" role="group" aria-label="สัดส่วนเงินสะสมกองทุน"></div>
       <div id="seg-tip" class="seg-tip" role="tooltip" hidden></div>
     </div>
     <ul id="seg-legend" class="legend2" aria-label="สถานะงบประมาณ จำนวนเงิน และสัดส่วน"></ul>
-    <p class="mt-2 text-xs text-[var(--ink2)]">ชี้หรือแตะที่แท่งเพื่อดูจำนวนเงิน · กดชื่อสถานะที่มีลูกศร › เพื่อดูรายการในแท็บภาระผูกพัน</p>
+    <p class="st-hint">ชี้หรือแตะที่แท่งเพื่อดูจำนวนเงิน · กดสถานะที่มี › เพื่อดูรายการในแท็บภาระผูกพัน</p>
   </section>
 
   <!-- คำเตือนจากข้อมูล (อยู่ใต้ตัวเลขหลัก เพื่อให้เงินที่ใช้ได้จริงขึ้นก่อน ป้ายสถานะในการ์ดบนพาไปอ่านต่อได้) -->
@@ -404,7 +455,7 @@
 
   <!-- แท็บ 1: ภาพรวม -->
   <div id="panel-overview" role="tabpanel" aria-labelledby="tab-overview" tabindex="0" class="mt-4 grid grid-cols-1 gap-5">
-    <article class="glass p-5 sm:p-6">
+    <article class="glass cmp p-4 sm:p-5">
       <h2 class="card-t">จากยอดยกมาถึงเงินที่ใช้ได้จริง</h2>
       <p class="card-s">หน่วย: ล้านบาท · แท่งลอยคือจำนวนที่เพิ่มหรือลดในแต่ละขั้น · เส้นประเชื่อมยอดสะสมไปขั้นถัดไป</p>
       <div id="ch-bridge" class="mt-3"></div>
@@ -417,12 +468,12 @@
     </article>
 
     <section class="grid grid-cols-1 gap-5 lg:grid-cols-2">
-      <article class="glass p-5 sm:p-6">
+      <article class="glass cmp p-4 sm:p-5">
         <h2 class="card-t"><span class="key" style="background:var(--in)"></span>รายรับจริง</h2>
         <p id="inc-sub" class="card-s">—</p>
         <ol id="list-inc" class="ranked"></ol>
       </article>
-      <article class="glass p-5 sm:p-6">
+      <article class="glass cmp p-4 sm:p-5">
         <h2 class="card-t"><span class="key" style="background:var(--out)"></span>รายจ่ายจริง</h2>
         <p id="exp-sub" class="card-s">—</p>
         <ol id="list-exp" class="ranked"></ol>
@@ -433,7 +484,7 @@
   <!-- แท็บ 2: ภาระผูกพันหลายปี -->
   <div id="panel-commit" role="tabpanel" aria-labelledby="tab-commit" tabindex="0" class="mt-4 grid grid-cols-1 gap-5" hidden>
 
-    <section class="glass p-5 sm:p-6" aria-labelledby="commit-title">
+    <section class="glass cmp p-4 sm:p-5" aria-labelledby="commit-title">
       <h2 id="commit-title" class="card-t">ภาระผูกพันคงค้าง จำแนกตามปีงบประมาณของทุน</h2>
       <p class="card-s">ตัวกรองนี้มีผลกับกราฟและตารางในแท็บนี้เท่านั้น — "เงินที่ใช้ได้จริง" และการ์ดสรุปด้านบนไม่เปลี่ยนตามตัวกรอง · ข้อมูล: <span id="commit-asof">—</span></p>
 
@@ -467,7 +518,7 @@
       </div>
     </section>
 
-    <article class="glass p-5 sm:p-6">
+    <article class="glass cmp p-4 sm:p-5">
       <div class="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 id="chart-title" class="card-t">เปรียบเทียบภาระผูกพันตามปีงบประมาณของทุน</h2>
@@ -484,13 +535,13 @@
       <p id="closed-note" class="mt-3 text-sm text-[var(--ink2)]">ภาระผูกพันรวมทุกสถานะตามข้อมูลต้นทาง รวมรายการยุติทุนที่ยังบันทึกอยู่</p>
     </article>
 
-    <section class="glass p-5 sm:p-6">
+    <section class="glass cmp p-4 sm:p-5">
       <h2 class="card-t">ตารางสรุป ปีของทุน × สถานะ</h2>
       <p class="card-s">หน่วย: บาท · ตัวเลขชุดเดียวกับกราฟด้านบน ตามตัวกรองที่เลือก</p>
       <div class="mt-3 overflow-x-auto"><table id="tbl" class="tbl"></table></div>
     </section>
 
-    <section id="detail-card" class="glass p-5 sm:p-6" aria-labelledby="detail-title">
+    <section id="detail-card" class="glass cmp p-4 sm:p-5" aria-labelledby="detail-title">
       <h2 id="detail-title" class="card-t" tabindex="-1">รายการภาระผูกพันตามตัวกรอง</h2>
       <p id="detail-sub" class="card-s">—</p>
       <div class="mt-3 overflow-x-auto"><table id="detail" class="tbl"></table></div>
@@ -1048,6 +1099,7 @@ function renderSeg(d, m) {
 
   /* รายการใต้แท่ง: ชื่อ · จำนวนเงิน · ร้อยละ · ปุ่มดูรายการ (สร้างใหม่เฉพาะตอนชุดสถานะเปลี่ยน เพื่อไม่ให้โฟกัสหลุด) */
   const lg = $('#seg-legend'), sig = live.map(p => p.name + (p.link ? '>' : '')).join('|');
+  lg.style.setProperty('--rows', Math.max(Math.ceil(live.length / 2), 1));   // จอกว้างแบ่งสองคอลัมน์ เรียงลงก่อนแล้วค่อยขึ้นคอลัมน์ใหม่
   if (lg._sig !== sig) {
     lg._sig = sig; lg.replaceChildren();
     live.forEach(p => {
