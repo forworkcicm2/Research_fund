@@ -236,6 +236,88 @@
 
   /* เลขปีบนแกนใช้ความกว้างตัวเลขเท่ากัน จะได้เรียงตรงกัน */
   .apexcharts-yaxis-label, .apexcharts-xaxis-label { font-variant-numeric: tabular-nums; }
+
+  /* ===== รอบจัดหน้าบนใหม่: การ์ดเล็กลง · แถบสถานะ · ป้ายสถานะ ===== */
+  .hero { padding: 1.25rem 1.25rem 1.1rem; }
+  @media (min-width: 640px) { .hero { padding: 1.5rem 1.75rem 1.25rem; } }
+  .hero .hero-fig { font-size: clamp(2.1rem, 8.4vw, 3.5rem); margin-top: .25rem; }
+  .hero-eq {
+    width: fit-content; max-width: 100%; margin-top: .35rem; font-size: 1rem; font-weight: 500; color: var(--ink);
+    cursor: help; text-decoration: underline dotted rgba(20, 18, 31, .38); text-underline-offset: 4px;
+  }
+  .hero-asof { margin-top: .2rem; font-size: .8125rem; line-height: 1.5; color: var(--ink2); }
+  .hero .formula { margin-top: .9rem; padding-top: .6rem; }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: .4rem; padding: .12rem .75rem .12rem .3rem; border-radius: 999px;
+    font-size: .8125rem; font-weight: 500; line-height: 1.5; border: 1px solid transparent; cursor: help;
+  }
+  .badge .b-ic {
+    flex: none; width: 17px; height: 17px; border-radius: 50%; display: inline-grid; place-items: center;
+    font-size: .72rem; font-weight: 700; line-height: 1;
+  }
+  .badge.ok { background: #dff5ea; color: #0a3a29; border-color: #93d6b8; }
+  .badge.ok .b-ic { background: #1baf7a; color: #0b0b0b; }
+  .badge.warn { background: #fff1c9; color: #4a3000; border-color: #f0c35a; }
+  .badge.warn .b-ic { background: #fab219; color: #0b0b0b; }
+  .badge.bad { background: #fde3e3; color: #6a1010; border-color: #eba0a0; }
+  .badge.bad .b-ic { background: #d03b3b; color: #fff; }
+
+  .kpi { padding: .95rem 1.05rem; border-radius: 22px; }
+  @media (min-width: 640px) { .kpi { padding: 1.1rem 1.35rem; } }
+  .kpi-l { display: flex; align-items: center; font-size: .875rem; color: var(--ink2); }
+  .kpi-v { margin-top: .15rem; font-size: clamp(1.05rem, 4.5vw, 1.75rem); font-weight: 700; line-height: 1.2; font-variant-numeric: proportional-nums; }
+  .kpi-v .cur { font-size: .62em; font-weight: 500; margin-right: .15em; color: var(--ink2); }
+  .kpi-s { margin-top: .2rem; font-size: .8125rem; line-height: 1.45; color: var(--ink2); }
+
+  .tile { padding: .8rem 1rem; border-radius: 20px; }
+  .tile-l { display: flex; align-items: center; font-size: .8125rem; color: var(--ink2); }
+  .tile .tile-v { margin-top: .1rem; font-size: clamp(1rem, 4.1vw, 1.4rem); }
+  .tile-s { margin-top: .1rem; font-size: .75rem; line-height: 1.4; color: var(--ink2); }
+  .sec-h { margin: 1.25rem 0 0; font-size: .875rem; font-weight: 500; color: var(--ink2); }
+
+  /* แถบสถานะแนวนอน: แต่ละช่วงเป็นปุ่ม ชี้/แตะแล้วเห็นจำนวนเงินจริง */
+  .seg-wrap { position: relative; }
+  .seg { display: flex; gap: 2px; height: 32px; width: 100%; }
+  .seg > button {
+    flex: 1 1 0; min-width: 6px; display: flex; align-items: center; padding: 0 0 0 8px; border: 0; border-radius: 6px;
+    font: inherit; font-size: .75rem; font-weight: 500; white-space: nowrap; text-align: left; overflow: hidden; cursor: pointer;
+    transition: flex-grow .7s cubic-bezier(.2, .8, .2, 1), filter .15s;
+  }
+  .seg > button:hover, .seg > button:focus-visible { filter: brightness(1.07) saturate(1.1); }
+  .seg > button:focus-visible, .seg > button.pin { outline: 2px solid var(--ink); outline-offset: 1px; }
+  .seg-tip {
+    position: absolute; z-index: 5; left: 0; bottom: calc(100% + 8px); width: max-content; max-width: min(100%, 22rem);
+    padding: .5rem .8rem; border-radius: 12px; pointer-events: none;
+    background: rgba(255, 255, 255, .98); border: 1px solid rgba(20, 18, 31, .16); box-shadow: 0 8px 28px rgba(50, 36, 100, .20);
+  }
+  .seg-tip .tt-h { font-size: .9375rem; font-weight: 700; line-height: 1.45; font-variant-numeric: tabular-nums; }
+  .seg-tip .tt-h .key { margin-right: .45rem; }
+  .seg-tip .tt-s { font-size: .8125rem; line-height: 1.45; color: var(--ink2); }
+
+  .legend2 { list-style: none; padding: 0; margin: .75rem 0 0; display: grid; gap: .1rem; }
+  .lg-row {
+    display: grid; grid-template-columns: minmax(0, 1fr) auto 3.1rem .9rem; align-items: center; gap: .25rem .6rem;
+    width: 100%; padding: .4rem .55rem; border: 0; border-radius: 12px; background: transparent;
+    font: inherit; font-size: .875rem; line-height: 1.4; color: var(--ink); text-align: left;
+  }
+  .lg-btn { cursor: pointer; transition: background .15s; }
+  .lg-btn:hover { background: rgba(255, 255, 255, .85); }
+  .lg-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+  .lg-n { display: flex; align-items: baseline; min-width: 0; }
+  .lg-n .key { flex: none; }
+  .lg-a { font-variant-numeric: tabular-nums; font-weight: 500; text-align: right; white-space: nowrap; }
+  .lg-p { font-variant-numeric: tabular-nums; text-align: right; color: var(--ink2); white-space: nowrap; }
+  .lg-go { color: var(--ink2); font-size: 1.15rem; line-height: 1; text-align: right; }
+  .lg-empty { padding: .4rem .55rem; font-size: .875rem; color: var(--ink2); }
+  /* จอแคบ: ชื่อสถานะได้ทั้งบรรทัด จำนวนเงินกับร้อยละอยู่บรรทัดล่าง */
+  @media (max-width: 480px) {
+    .lg-row { grid-template-columns: minmax(0, 1fr) auto .9rem; gap: .05rem .5rem; padding: .45rem .3rem; }
+    .lg-n { grid-column: 1 / -1; }
+    .lg-a { grid-column: 1; text-align: left; padding-left: calc(10px + .5rem); }
+    .lg-p { grid-column: 2; }
+    .lg-go { grid-column: 3; }
+  }
 </style>
 </head>
 
@@ -259,27 +341,16 @@
   </header>
 
   <div id="status-banner" class="mt-4 grid gap-2"></div>
-  <div id="notices" class="mt-3 grid gap-2"></div>
 
-  <!-- ขอบเขตของตัวเลขทั้งหน้า -->
-  <div id="scope" class="scope mt-4" role="group" aria-label="ขอบเขตของข้อมูลในหน้านี้">
-    <span>รายรับ–รายจ่าย: <b id="scope-ie">—</b></span>
-    <span>ภาระผูกพัน: <b id="scope-c">—</b></span>
-    <span>ข้อมูล: <b id="scope-asof">—</b></span>
-  </div>
-
-  <!-- ตัวเลขหลัก -->
-  <section class="glass mt-4 p-6 sm:p-8" aria-labelledby="hero-l">
-    <p id="hero-l" class="text-base text-[var(--ink2)]">เงินที่ใช้ได้จริง</p>
-    <p class="hero-fig"><span class="cur">฿</span><span id="hero-val">—</span></p>
-    <p id="hero-eq" class="mt-2 text-sm text-[var(--ink2)]">เงินสะสมกองทุน − ภาระผูกพัน</p>
-    <p id="hero-asof" class="mt-1 text-sm text-[var(--ink2)]"></p>
-
-    <div class="mt-7">
-      <p id="seg-title" class="mb-2 text-sm text-[var(--ink2)]">เงินสะสมกองทุนแบ่งเป็น</p>
-      <div id="seg" class="seg" role="img" aria-label="สัดส่วนเงินสะสมกองทุน"></div>
-      <ul id="seg-legend" class="legend" aria-label="คำอธิบายสีของแท่งสัดส่วน"></ul>
+  <!-- ตัวเลขหลัก เรียงตามความสำคัญ: เงินใช้ได้จริง > ภาระผูกพัน > เงินสะสมกองทุน > สถานะงบ > ลิงก์ดูรายการ -->
+  <section class="glass hero mt-3" aria-labelledby="hero-l">
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+      <p id="hero-l" class="text-base font-medium text-[var(--ink2)]">เงินที่ใช้ได้จริง</p>
+      <span id="hero-badge" class="badge" role="status" hidden><span class="b-ic" aria-hidden="true"></span><span class="b-tx"></span></span>
     </div>
+    <p class="hero-fig"><span class="cur">฿</span><span id="hero-val">—</span></p>
+    <p id="hero-eq" class="hero-eq">เงินสะสม − ภาระผูกพัน</p>
+    <p id="hero-asof" class="hero-asof"></p>
 
     <details id="formula" class="formula">
       <summary>ดูวิธีคำนวณเงินที่ใช้ได้จริง ทีละขั้น</summary>
@@ -287,10 +358,44 @@
     </details>
   </section>
 
-  <section id="tiles" class="mt-5 grid grid-cols-2 gap-4 lg:grid-cols-3" aria-label="ตัวเลขสรุป"></section>
+  <section class="mt-3 grid grid-cols-2 gap-3" aria-label="ภาระผูกพันและเงินสะสมกองทุน">
+    <article id="kpi-commit" class="glass kpi">
+      <p class="kpi-l"><span class="key" style="background:var(--out)"></span>ภาระผูกพัน</p>
+      <p class="kpi-v"><span class="cur">฿</span><span id="kpi-commit-v">—</span></p>
+      <p id="kpi-commit-s" class="kpi-s"></p>
+    </article>
+    <article id="kpi-fund" class="glass kpi">
+      <p class="kpi-l"><span id="kpi-fund-l">เงินสะสมกองทุน</span></p>
+      <p class="kpi-v"><span class="cur">฿</span><span id="kpi-fund-v">—</span></p>
+      <p id="kpi-fund-s" class="kpi-s"></p>
+    </article>
+  </section>
+
+  <section class="glass mt-3 p-5 sm:p-6" aria-labelledby="st-title">
+    <h2 id="st-title" class="card-t">สถานะงบประมาณ</h2>
+    <p id="seg-title" class="card-s">เงินสะสมกองทุนแบ่งเป็น</p>
+    <div class="seg-wrap mt-3">
+      <div id="seg" class="seg" role="group" aria-label="สัดส่วนเงินสะสมกองทุน"></div>
+      <div id="seg-tip" class="seg-tip" role="tooltip" hidden></div>
+    </div>
+    <ul id="seg-legend" class="legend2" aria-label="สถานะงบประมาณ จำนวนเงิน และสัดส่วน"></ul>
+    <p class="mt-2 text-xs text-[var(--ink2)]">ชี้หรือแตะที่แท่งเพื่อดูจำนวนเงิน · กดชื่อสถานะที่มีลูกศร › เพื่อดูรายการในแท็บภาระผูกพัน</p>
+  </section>
+
+  <!-- คำเตือนจากข้อมูล (อยู่ใต้ตัวเลขหลัก เพื่อให้เงินที่ใช้ได้จริงขึ้นก่อน ป้ายสถานะในการ์ดบนพาไปอ่านต่อได้) -->
+  <div id="notices" class="mt-3 grid gap-2"></div>
+
+  <!-- ขอบเขตของตัวเลขทั้งหน้า -->
+  <div id="scope" class="scope mt-3" role="group" aria-label="ขอบเขตของข้อมูลในหน้านี้">
+    <span>รายรับ–รายจ่าย: <b id="scope-ie">—</b></span>
+    <span>ภาระผูกพัน: <b id="scope-c">—</b></span>
+  </div>
+
+  <h2 class="sec-h">ที่มาของเงินสะสมกองทุน</h2>
+  <section id="tiles" class="mt-2 grid grid-cols-2 gap-3 lg:grid-cols-4" aria-label="ที่มาของเงินสะสมกองทุน"></section>
 
   <!-- แท็บ -->
-  <div class="mt-7 max-w-full overflow-x-auto pb-1">
+  <div class="mt-5 max-w-full overflow-x-auto pb-1">
     <div class="tabs" role="tablist" aria-label="หมวดข้อมูล">
       <button id="tab-overview" class="tab" type="button" role="tab" aria-selected="true" aria-controls="panel-overview">ภาพรวมปีงบประมาณ</button>
       <button id="tab-commit" class="tab" type="button" role="tab" aria-selected="false" aria-controls="panel-commit" tabindex="-1">ภาระผูกพันหลายปี</button>
@@ -299,7 +404,7 @@
 
   <!-- แท็บ 1: ภาพรวม -->
   <div id="panel-overview" role="tabpanel" aria-labelledby="tab-overview" tabindex="0" class="mt-4 grid grid-cols-1 gap-5">
-    <article class="glass p-6 sm:p-7">
+    <article class="glass p-5 sm:p-6">
       <h2 class="card-t">จากยอดยกมาถึงเงินที่ใช้ได้จริง</h2>
       <p class="card-s">หน่วย: ล้านบาท · แท่งลอยคือจำนวนที่เพิ่มหรือลดในแต่ละขั้น · เส้นประเชื่อมยอดสะสมไปขั้นถัดไป</p>
       <div id="ch-bridge" class="mt-3"></div>
@@ -312,12 +417,12 @@
     </article>
 
     <section class="grid grid-cols-1 gap-5 lg:grid-cols-2">
-      <article class="glass p-6 sm:p-7">
+      <article class="glass p-5 sm:p-6">
         <h2 class="card-t"><span class="key" style="background:var(--in)"></span>รายรับจริง</h2>
         <p id="inc-sub" class="card-s">—</p>
         <ol id="list-inc" class="ranked"></ol>
       </article>
-      <article class="glass p-6 sm:p-7">
+      <article class="glass p-5 sm:p-6">
         <h2 class="card-t"><span class="key" style="background:var(--out)"></span>รายจ่ายจริง</h2>
         <p id="exp-sub" class="card-s">—</p>
         <ol id="list-exp" class="ranked"></ol>
@@ -328,7 +433,7 @@
   <!-- แท็บ 2: ภาระผูกพันหลายปี -->
   <div id="panel-commit" role="tabpanel" aria-labelledby="tab-commit" tabindex="0" class="mt-4 grid grid-cols-1 gap-5" hidden>
 
-    <section class="glass p-6 sm:p-7" aria-labelledby="commit-title">
+    <section class="glass p-5 sm:p-6" aria-labelledby="commit-title">
       <h2 id="commit-title" class="card-t">ภาระผูกพันคงค้าง จำแนกตามปีงบประมาณของทุน</h2>
       <p class="card-s">ตัวกรองนี้มีผลกับกราฟและตารางในแท็บนี้เท่านั้น — "เงินที่ใช้ได้จริง" และการ์ดสรุปด้านบนไม่เปลี่ยนตามตัวกรอง · ข้อมูล: <span id="commit-asof">—</span></p>
 
@@ -362,7 +467,7 @@
       </div>
     </section>
 
-    <article class="glass p-6 sm:p-7">
+    <article class="glass p-5 sm:p-6">
       <div class="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 id="chart-title" class="card-t">เปรียบเทียบภาระผูกพันตามปีงบประมาณของทุน</h2>
@@ -379,13 +484,13 @@
       <p id="closed-note" class="mt-3 text-sm text-[var(--ink2)]">ภาระผูกพันรวมทุกสถานะตามข้อมูลต้นทาง รวมรายการยุติทุนที่ยังบันทึกอยู่</p>
     </article>
 
-    <section class="glass p-6 sm:p-7">
+    <section class="glass p-5 sm:p-6">
       <h2 class="card-t">ตารางสรุป ปีของทุน × สถานะ</h2>
       <p class="card-s">หน่วย: บาท · ตัวเลขชุดเดียวกับกราฟด้านบน ตามตัวกรองที่เลือก</p>
       <div class="mt-3 overflow-x-auto"><table id="tbl" class="tbl"></table></div>
     </section>
 
-    <section id="detail-card" class="glass p-6 sm:p-7" aria-labelledby="detail-title">
+    <section id="detail-card" class="glass p-5 sm:p-6" aria-labelledby="detail-title">
       <h2 id="detail-title" class="card-t" tabindex="-1">รายการภาระผูกพันตามตัวกรอง</h2>
       <p id="detail-sub" class="card-s">—</p>
       <div class="mt-3 overflow-x-auto"><table id="detail" class="tbl"></table></div>
@@ -796,10 +901,10 @@ function render(d) {
   document.title = 'Research fund — รายงานกองทุนวิจัยปี ' + d.fy;
   $('#fy-label').textContent = 'ปีงบประมาณ ' + d.fy;
 
-  /* ตัวเลขเด่น (ไม่เปลี่ยนตามตัวกรองของแท็บภาระผูกพัน) */
-  tween($('#hero-val'), s.usable, nf2.format);
-  $('#hero-eq').textContent = 'เงินสะสมกองทุน ' + nf2.format(s.fund) + ' − ภาระผูกพันทั้งหมด ' + nf2.format(s.commit);
-
+  /* ตัวเลขเด่นเรียงตามความสำคัญ (ไม่เปลี่ยนตามตัวกรองของแท็บภาระผูกพัน):
+     เงินใช้ได้จริง > ภาระผูกพัน > เงินสะสมกองทุน > แถบสัดส่วนสถานะ > ลิงก์ดูรายการ > ที่มาของเงินสะสม */
+  renderHero(d, full);
+  renderKpis(d, full);
   renderScope(d, full);
   renderFormula(d, full);
   renderSeg(d, full);
@@ -860,9 +965,16 @@ function asofText() {
   if (S.via === 'snapshot') return 'ไฟล์สำรอง' + (d.generatedAt ? ' สร้างเมื่อ ' + dateTimeStr(d.generatedAt) : '') + ' · ไม่ทราบวันที่ตัดยอด';
   return 'ยังไม่ระบุวันที่ตัดยอดในชีต · อ่านชีตล่าสุดเวลา ' + timeStr(S.lastOk || Date.now());
 }
+/* บรรทัดรองใต้ตัวเลขเด่น: สั้น ๆ ว่าอัปเดตเมื่อไรและตัดยอดวันไหน */
+function heroAsofText() {
+  const d = S.data;
+  if (!d) return '—';
+  const cut = d.asOfDate ? 'ตัวเลข ณ วันที่ ' + d.asOfDate + ' (ตามที่ระบุในชีต)' : null;
+  if (S.via === 'snapshot') return 'ไฟล์สำรอง' + (d.generatedAt ? ' สร้างเมื่อ ' + dateTimeStr(d.generatedAt) : '') + ' · ' + (cut || 'ไม่ทราบวันที่ตัดยอด');
+  return 'อัปเดตล่าสุด ' + timeStr(S.lastOk || Date.now()) + ' · ' + (cut || 'ยังไม่ระบุวันที่ตัดยอดในชีต');
+}
 function renderAsof() {
-  const t = asofText();
-  ['#scope-asof', '#hero-asof', '#commit-asof'].forEach(id => { const n = $(id); if (n && n.textContent !== t) n.textContent = t; });
+  [['#hero-asof', heroAsofText()], ['#commit-asof', asofText()]].forEach(([id, t]) => { const n = $(id); if (n && n.textContent !== t) n.textContent = t; });
 }
 
 /* --- วิธีคำนวณ (ตารางพับ) --- */
@@ -898,68 +1010,159 @@ function goFormula() {
   jump(f);
   f.querySelector('summary').focus({ preventScroll: true });
 }
-/* คำเตือน "ไม่ระบุสถานะ" -> ไปแท็บภาระผูกพัน กรองเหลือรายการที่ไม่ระบุสถานะทันที */
-function goUnknown() {
-  F.years = null; F.statuses = new Set([UNKNOWN]);
+/* --- แท่งแบ่งสัดส่วนสูง: เงินสะสมกองทุน = ใช้ได้จริง + ภาระผูกพันแยกสถานะ (ชี้/แตะแล้วเห็นจำนวนเงินจริง) --- */
+const SEG_ORDER = ['รอเอกสารจากงานวิจัย', 'ไม่ระบุสถานะ', 'รอเอกสารประกอบการเบิกจ่าย', 'ยุติทุน'];
+function segParts(d, m) {
+  const s = d.summary;
+  const parts = [{ name: 'ใช้ได้จริง', val: Math.max(s.usable, 0), color: C.usable, link: false }];
+  SEG_ORDER.concat(m.statuses.filter(x => !SEG_ORDER.includes(x))).forEach(st => {
+    if ((m.statusTot[st] || 0) > 0.004) parts.push({ name: st, val: m.statusTot[st], color: statusColor(st), link: true });
+  });
+  return parts.filter(p => p.val > 0.004);
+}
+
+function renderSeg(d, m) {
+  const s = d.summary, live = segParts(d, m), total = live.reduce((a, p) => a + p.val, 0);
+  /* ปกติส่วนแบ่งคิดจากเงินสะสมกองทุน แต่ถ้าภาระผูกพันสูงกว่าเงินสะสม ฐานคือภาระผูกพันทั้งหมด (ไม่ใช้ฐานที่ติดลบ) */
+  const over = s.usable < -0.004, den = over ? 'ภาระผูกพันทั้งหมด' : 'เงินสะสมกองทุน';
+  $('#seg-title').textContent = over
+    ? 'ภาระผูกพันทั้งหมด ' + nf2.format(s.commit) + ' บาท (สูงกว่าเงินสะสมกองทุน) แบ่งตามสถานะ'
+    : 'เงินสะสมกองทุน ' + nf2.format(s.fund) + ' บาท แบ่งเป็น';
+
+  const seg = $('#seg');
+  while (seg.children.length > live.length) seg.lastChild.remove();
+  while (seg.children.length < live.length) { const b = el('button'); b.type = 'button'; b.appendChild(el('span')); seg.appendChild(b); }
+  const W = Math.max(seg.clientWidth - Math.max(live.length - 1, 0) * 2, 1), desc = [];
+  live.forEach((p, i) => {
+    const b = seg.children[i], share = P(p.val, total);
+    b.style.flexGrow = String(p.val); b.style.background = p.color; b.style.color = inkOn(p.color);
+    b._info = { name: p.name, val: p.val, share, color: p.color, den };
+    const label = p.name + ': ฿' + nf2.format(p.val) + ' (ร้อยละ ' + share + ' ของ' + den + ')';
+    b.setAttribute('aria-label', label);
+    const sp = b.firstChild; sp.textContent = share + '%';
+    sp.style.display = (W * p.val / total) >= 52 ? '' : 'none';   // ป้ายที่ไม่พอดีไม่ถูกพิมพ์ ค่าจริงอยู่ใน tooltip และรายการด้านล่าง
+    desc.push(label);
+  });
+  seg.hidden = !live.length;
+  seg.setAttribute('aria-label', 'สัดส่วนเงินสะสมกองทุน: ' + desc.join(', '));
+
+  /* รายการใต้แท่ง: ชื่อ · จำนวนเงิน · ร้อยละ · ปุ่มดูรายการ (สร้างใหม่เฉพาะตอนชุดสถานะเปลี่ยน เพื่อไม่ให้โฟกัสหลุด) */
+  const lg = $('#seg-legend'), sig = live.map(p => p.name + (p.link ? '>' : '')).join('|');
+  if (lg._sig !== sig) {
+    lg._sig = sig; lg.replaceChildren();
+    live.forEach(p => {
+      const li = el('li'), row = el(p.link ? 'button' : 'div', 'lg-row' + (p.link ? ' lg-btn' : ''));
+      const n = el('span', 'lg-n'), k = el('span', 'key'); n.append(k, el('span', '', p.name));
+      const go = el('span', 'lg-go', p.link ? '›' : ''); go.setAttribute('aria-hidden', 'true');
+      if (p.link) { row.type = 'button'; row.addEventListener('click', () => goStatus(p.name)); }
+      row.append(n, el('span', 'lg-a'), el('span', 'lg-p'), go);
+      li.appendChild(row); lg.appendChild(li);
+    });
+  }
+  live.forEach((p, i) => {
+    const row = lg.children[i].firstChild, share = P(p.val, total);
+    row.children[0].firstChild.style.background = p.color;
+    row.children[1].textContent = '฿' + nf2.format(p.val);
+    row.children[2].textContent = share + '%';
+    if (p.link) row.setAttribute('aria-label', 'ดูรายการสถานะ ' + p.name + ' ' + nf2.format(p.val) + ' บาท ร้อยละ ' + share);
+  });
+  if (!live.length) { lg._sig = null; lg.replaceChildren(el('li', 'lg-empty', 'ยังไม่มียอดให้แบ่งสัดส่วน')); }
+
+  /* ถ้า tooltip เปิดอยู่ระหว่างที่ข้อมูลหรือขนาดจอเปลี่ยน ให้ตามไปอัปเดต ไม่ปิดทิ้ง */
+  if (S.segOn) { if (seg.contains(S.segOn)) showSegTip(S.segOn); else hideSegTip(); }
+}
+
+/* --- tooltip ของแถบสถานะ: ชี้ = ดูชั่วคราว · แตะ/คลิก = ปักไว้ (แตะซ้ำ, แตะที่อื่น หรือ Esc = ปิด) --- */
+function showSegTip(b) {
+  const tip = $('#seg-tip'), i = b._info; if (!i) return;
+  tip.replaceChildren();
+  const h = el('div', 'tt-h'), k = el('span', 'key'); k.style.background = i.color;
+  h.append(k, i.name + ': ฿' + nf2.format(i.val));
+  tip.append(h, el('div', 'tt-s', 'ร้อยละ ' + i.share + ' ของ' + i.den));
+  tip.hidden = false; tip.style.visibility = 'hidden';
+  const wrap = tip.parentNode, w = tip.offsetWidth, W = wrap.clientWidth;
+  const c = b.offsetLeft + b.offsetWidth / 2;
+  tip.style.left = Math.round(Math.min(Math.max(c - w / 2, 0), Math.max(W - w, 0))) + 'px';
+  tip.style.visibility = '';
+  if (S.segOn && S.segOn !== b) { S.segOn.classList.remove('pin'); S.segOn.removeAttribute('aria-describedby'); }
+  S.segOn = b; b.setAttribute('aria-describedby', 'seg-tip'); b.classList.toggle('pin', !!S.segPin);
+}
+function hideSegTip() {
+  const tip = $('#seg-tip');
+  if (S.segOn) { S.segOn.classList.remove('pin'); S.segOn.removeAttribute('aria-describedby'); }
+  tip.hidden = true; S.segOn = null; S.segPin = false;
+}
+/* ปุ่มในรายการสถานะ -> แท็บภาระผูกพัน กรองเหลือสถานะนั้นทันที */
+function goStatus(st) {
+  F.years = null; F.statuses = new Set([st]);
   showTab('commit');
   renderCommitTab();
   const h = $('#detail-title'); jump($('#detail-card')); h.focus({ preventScroll: true });
 }
+const goUnknown = () => goStatus(UNKNOWN);
 
-/* --- แท่งแบ่งสัดส่วนสูง: เงินสะสมกองทุน = ใช้ได้จริง + ภาระผูกพันแยกสถานะ --- */
-function renderSeg(d, m) {
-  const s = d.summary;
-  const parts = [{ name: 'ใช้ได้จริง', val: Math.max(s.usable, 0), color: C.usable }];
-  ['รอเอกสารจากงานวิจัย', 'ไม่ระบุสถานะ', 'รอเอกสารประกอบการเบิกจ่าย', 'ยุติทุน'].concat(m.statuses.filter(x => !C.status[x]))
-    .forEach(st => { if (m.statusTot[st] > 0.004) parts.push({ name: st, val: m.statusTot[st], color: statusColor(st) }); });
-  const live = parts.filter(p => p.val > 0.004);
-  const total = live.reduce((a, p) => a + p.val, 0);
-  $('#seg-title').textContent = 'เงินสะสมกองทุน ' + nf2.format(s.fund) + ' บาท แบ่งเป็น';
-  const seg = $('#seg');
-  while (seg.children.length > live.length) seg.lastChild.remove();
-  while (seg.children.length < live.length) { const b = el('div'); b.tabIndex = 0; b.appendChild(el('span')); seg.appendChild(b); }
-  const gaps = (live.length - 1) * 2, W = Math.max(seg.clientWidth - gaps, 1);
-  const desc = [];
-  live.forEach((p, i) => {
-    const b = seg.children[i], share = P(p.val, total);
-    b.style.flexGrow = String(p.val); b.style.background = p.color; b.style.color = inkOn(p.color);
-    const label = p.name + ' ' + nf2.format(p.val) + ' บาท (' + share + '%)';
-    b.title = label; b.setAttribute('aria-label', label);
-    const sp = b.firstChild; sp.textContent = share + '%';
-    sp.style.display = (W * p.val / total) >= 52 ? '' : 'none';   // ป้ายที่ไม่พอดีไม่ถูกพิมพ์ (ค่าอยู่ใน tooltip/ตาราง)
-    desc.push(label);
-  });
-  seg.setAttribute('aria-label', 'สัดส่วนเงินสะสมกองทุน: ' + desc.join(', '));
-  const lg = $('#seg-legend'); lg.replaceChildren();
-  live.forEach(p => { const li = el('li'); const k = el('span', 'key'); k.style.background = p.color; li.append(k, p.name); lg.appendChild(li); });
+/* --- ป้ายสถานะใต้ "เงินที่ใช้ได้จริง": อ่านแล้วรู้ทันทีว่าจัดสรรได้หรือต้องตรวจก่อน --- */
+function heroState(d, full) {
+  const s = d.summary, unk = full.statusTot[UNKNOWN] || 0, closed = full.statusTot['ยุติทุน'] || 0;
+  if (s.usable < -0.004) return { k: 'bad', ic: '!', t: 'ภาระผูกพันเกินเงินสะสม', why: 'ภาระผูกพันทั้งหมดสูงกว่าเงินสะสมกองทุนอยู่ ' + nf2.format(r2(-s.usable)) + ' บาท' };
+  if (s.usable <= 0.004) return { k: 'bad', ic: '!', t: 'ไม่มีเงินเหลือให้จัดสรร', why: 'ภาระผูกพันทั้งหมดเท่ากับเงินสะสมกองทุนพอดี' };
+  const why = [];
+  if (unk > 0.004) why.push(nf2.format(r2(unk)) + ' บาทของภาระผูกพันยังไม่ระบุสถานะ');
+  if (Math.abs(s.other) > 0.004) why.push('มียอดหักอื่น ' + nf2.format(r2(s.other)) + ' บาทที่ยังไม่ทราบที่มา');
+  if (why.length) {
+    if (closed > 0.004) why.push('รายการยุติทุน ' + nf2.format(r2(closed)) + ' บาทยังนับเป็นภาระผูกพัน');
+    return { k: 'warn', ic: '!', t: 'ต้องตรวจสอบภาระผูกพัน', why: 'ควรตรวจสอบก่อนจัดสรร: ' + why.join(' · ') };
+  }
+  return { k: 'ok', ic: '✓', t: 'พร้อมจัดสรร', why: 'ภาระผูกพันทุกรายการระบุสถานะแล้ว และไม่มียอดหักอื่นที่ไม่ทราบที่มา' };
+}
+S.heroState = heroState;   // ให้การทดสอบเรียกตรง ๆ ได้
+
+function renderHero(d, full) {
+  const s = d.summary, st = heroState(d, full), b = $('#hero-badge');
+  tween($('#hero-val'), s.usable, nf2.format);
+  const eq = $('#hero-eq');
+  eq.textContent = 'เงินสะสม − ภาระผูกพัน';
+  eq.title = 'เงินสะสมกองทุน ' + nf2.format(s.fund) + ' − ภาระผูกพันทั้งหมด ' + nf2.format(s.commit) + ' = ' + nf2.format(s.usable) + ' บาท';
+  b.hidden = false; b.className = 'badge ' + st.k; b.title = st.why;
+  b.firstChild.textContent = st.ic; b.lastChild.textContent = st.t;
+  b.setAttribute('aria-label', st.t + ': ' + st.why);
 }
 
-/* --- แถวตัวเลข 6 ใบ --- */
+/* --- การ์ด KPI สองใบ: ภาระผูกพัน (ลำดับที่ 2) และเงินสะสมกองทุน (ลำดับที่ 3) --- */
+function renderKpis(d, m) {
+  const s = d.summary;
+  tween($('#kpi-commit-v'), s.commit, nf2.format);
+  const cs = $('#kpi-commit-s');
+  cs.textContent = 'ทุกสถานะ' + (s.fund > 0.004 ? ' · ร้อยละ ' + P(s.commit, s.fund) + ' ของเงินสะสม' : '');
+  cs.title = 'ภาระผูกพันทุกสถานะ ตั้งแต่ปี ' + m.minYear + ' ถึง ' + d.fy;
+  $('#kpi-fund-l').textContent = 'เงินสะสมกองทุน';
+  tween($('#kpi-fund-v'), s.fund, nf2.format);
+  $('#kpi-fund-s').textContent = Math.abs(s.other) > 0.004 ? 'หลังหักรายจ่ายและยอดหักอื่น' : 'หลังหักรายจ่าย';
+}
+
+/* --- ที่มาของเงินสะสมกองทุน: การ์ดเล็ก 4 ใบ --- */
 const TILES = [
   { k: 'carry', dot: C.in, l: d => 'ยอดยกมา ปี ' + (d.fy - 1), sub: () => 'ยกมาจากปีงบประมาณก่อน' },
   { k: 'income', dot: C.in, l: d => 'รายรับจริง ปี ' + d.fy, sub: d => d.income.length + ' รายการ' },
   { k: 'available', dot: null, l: () => 'รวมเงินที่มี', sub: () => 'ยอดยกมา + รายรับจริง' },
-  { k: 'spent', dot: C.out, l: d => 'รายจ่ายจริง ปี ' + d.fy, sub: (d, s) => d.expense.length + ' หมวด · ร้อยละ ' + P(s.spent, s.available) + ' ของเงินที่มี' },
-  { k: 'fund', dot: null, l: d => 'เงินสะสมกองทุน ปี ' + d.fy, sub: (d, s) => Math.abs(s.other) > 0.004 ? 'หลังหักรายจ่ายและยอดหักอื่น' : 'หลังหักรายจ่าย' },
-  { k: 'commit', dot: C.out, l: (d, s, m) => 'ภาระผูกพัน ตั้งแต่ปี ' + m.minYear + '-' + d.fy, sub: (d, s) => 'ร้อยละ ' + P(s.commit, s.fund) + ' ของเงินสะสมกองทุน' }
+  { k: 'spent', dot: C.out, l: d => 'รายจ่ายจริง ปี ' + d.fy, sub: (d, s) => d.expense.length + ' หมวด · ร้อยละ ' + P(s.spent, s.available) + ' ของเงินที่มี' }
 ];
 function renderTiles(d, m) {
   const box = $('#tiles'), s = d.summary;
   if (!box.children.length) {
     TILES.forEach(t => {
-      const a = el('article', 'glass p-5 sm:p-6');
-      const lab = el('p', 'text-sm text-[var(--ink2)]');
+      const a = el('article', 'glass tile');
+      const lab = el('p', 'tile-l');
       if (t.dot) { const k = el('span', 'key'); k.style.background = t.dot; lab.appendChild(k); }
-      lab.appendChild(el('span')); // ข้อความป้ายชื่อ (อยู่ท้ายสุดเสมอ)
-      const v = el('p', 'tile-v'), sub = el('p', 'mt-1 text-sm text-[var(--ink2)]');
-      a.append(lab, v, sub); a.dataset.k = t.k; box.appendChild(a);
+      lab.appendChild(el('span'));   // ข้อความป้ายชื่อ (อยู่ท้ายสุดเสมอ)
+      a.append(lab, el('p', 'tile-v'), el('p', 'tile-s')); a.dataset.k = t.k; box.appendChild(a);
     });
   }
   TILES.forEach((t, i) => {
-    const a = box.children[i], lab = a.firstChild, v = a.children[1], sub = a.children[2];
-    lab.lastChild.textContent = t.l(d, s, m);
-    tween(v, s[t.k], nf2.format);
-    sub.textContent = t.sub(d, s, m);
+    const a = box.children[i];
+    a.firstChild.lastChild.textContent = t.l(d, s, m);
+    tween(a.children[1], s[t.k], nf2.format);
+    a.children[2].textContent = t.sub(d, s, m);
   });
 }
 
@@ -1415,6 +1618,20 @@ onChip($('#v-toggle'), 'v', setView);
 $('#f-sort').addEventListener('change', e => { F.sort = e.target.value; renderCommitTab(); });
 $('#f-clear').addEventListener('click', clearFilters);
 if (location.hash === '#commit') showTab('commit');
+
+/* แถบสถานะ: ชี้/โฟกัส = ดูจำนวนเงินชั่วคราว · คลิก/แตะ = ปักไว้ (คลิกซ้ำ, คลิกที่อื่น หรือกด Esc = ปิด) */
+const segBox = $('#seg'), segBtn = e => e.target.closest && e.target.closest('#seg > button');
+segBox.addEventListener('mouseover', e => { const b = segBtn(e); if (b && b !== S.segOn) { S.segPin = false; showSegTip(b); } });
+segBox.addEventListener('mouseleave', () => { if (!S.segPin) hideSegTip(); });
+segBox.addEventListener('focusin', e => { const b = segBtn(e); if (b && b !== S.segOn) { S.segPin = false; showSegTip(b); } });
+segBox.addEventListener('focusout', e => { if (!S.segPin && !segBox.contains(e.relatedTarget)) hideSegTip(); });
+segBox.addEventListener('click', e => {
+  const b = segBtn(e); if (!b) return;
+  e.stopPropagation();
+  if (S.segOn === b && S.segPin) hideSegTip(); else { S.segPin = true; showSegTip(b); }
+});
+document.addEventListener('click', () => { if (S.segPin) hideSegTip(); });
+addEventListener('keydown', e => { if (e.key === 'Escape' && S.segOn) hideSegTip(); });
 
 let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => {
   if (!S.data) return;
