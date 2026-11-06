@@ -462,7 +462,7 @@
       <ul class="legend" aria-label="คำอธิบายสีของกราฟ">
         <li><span class="key" style="background:var(--in)"></span>เพิ่ม</li>
         <li><span class="key" style="background:var(--out)"></span>ลด</li>
-        <li><span class="key" style="background:var(--neutral)"></span>ยอดรวมระหว่างทาง</li>
+        <li><span class="key" style="background:var(--neutral)"></span>ยอดเงินสะสม</li>
         <li><span class="key" style="background:var(--usable)"></span>เงินที่ใช้ได้จริง</li>
       </ul>
     </article>
@@ -1218,72 +1218,67 @@ function renderTiles(d, m) {
   });
 }
 
-/* --- กราฟสะพานเงิน (waterfall) --- */
+/* --- กราฟแท่งเปรียบเทียบที่มาของเงินและยอดคงเหลือ --- */
 const NARROW = () => innerWidth < 640;
 const SHORT = { 'ยอดยกมา': 'ยกมา', 'รายรับ': 'รายรับ', 'รายจ่าย': 'จ่าย', 'ยอดหักอื่น': 'หักอื่น', 'เงินสะสม': 'สะสม', 'ภาระผูกพัน': 'ผูกพัน', 'ใช้ได้จริง': 'ใช้ได้' };
 function bridgeSteps(s) {
-  const out = []; let lvl = 0;
-  const up = (n, v) => { out.push({ n, v, a: lvl, b: lvl + v, c: C.in }); lvl += v; };
-  const down = (n, v) => { out.push({ n, v: -v, a: lvl, b: lvl - v, c: C.out }); lvl -= v; };
-  up('ยอดยกมา', s.carry); up('รายรับ', s.income); down('รายจ่าย', s.spent);
-  if (Math.abs(s.other) > 0.004) down('ยอดหักอื่น', s.other);
-  out.push({ n: 'เงินสะสม', v: s.fund, a: 0, b: s.fund, c: C.neutral, total: true });
-  lvl = s.fund; down('ภาระผูกพัน', s.commit);
-  out.push({ n: 'ใช้ได้จริง', v: s.usable, a: 0, b: s.usable, c: C.usable, total: true });
+  const out = [];
+  const add = (n, v, c, total = false) => out.push({ n, v, c, total });
+  add('ยอดยกมา', s.carry, C.neutral, true);
+  add('รายรับ', s.income, C.in);
+  add('รายจ่าย', -s.spent, C.out);
+  if (Math.abs(s.other) > 0.004) add('ยอดหักอื่น', -s.other, C.out);
+  add('เงินสะสม', s.fund, C.neutral, true);
+  add('ภาระผูกพัน', -s.commit, C.out);
+  add('ใช้ได้จริง', s.usable, C.usable, true);
   return out;
 }
-const signedM = (x) => (x.total ? '' : (x.v >= 0 ? '+' : '−')) + M(Math.abs(x.v));
-
-/* เส้นประเชื่อมยอดสะสมจากแท่งหนึ่งไปแท่งถัดไป: วาดทับในกลุ่มเดียวกับแท่ง ใช้ตำแหน่งจริงของแท่งที่ Apex วาด */
-function drawConn() {
-  try {
-    const box = $('#ch-bridge'), steps = S.bridgeSteps;
-    if (!box || !steps || $('#panel-overview').hidden) return;
-    const paths = [...box.querySelectorAll('path.apexcharts-rangebar-area')];
-    if (paths.length < 2 || paths.length !== steps.length) return;
-    const par = paths[0].parentNode;
-    par.querySelectorAll('.rf-conn').forEach(n => n.remove());
-    const bb = paths.map(p => p.getBBox());
-    for (let i = 0; i < paths.length - 1; i++) {
-      const a = bb[i], b = bb[i + 1], st = steps[i];
-      if (!(a.width > 0) || !(b.width > 0)) continue;
-      const y = st.b >= st.a ? a.y : a.y + a.height;   // ยอดหลังขั้นนี้ = ขอบบนของแท่งเพิ่ม/ยอดรวม และขอบล่างของแท่งลด
-      const ln = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      ln.setAttribute('class', 'rf-conn');
-      ln.setAttribute('x1', a.x + a.width); ln.setAttribute('x2', b.x);
-      ln.setAttribute('y1', y); ln.setAttribute('y2', y);
-      par.appendChild(ln);
-    }
-  } catch (_) { /* วาดเส้นเชื่อมไม่ได้ก็ไม่กระทบกราฟ */ }
-}
+const signedM = x => (x.total ? '' : (x.v >= 0 ? '+' : '−')) + M(Math.abs(x.v));
 
 function renderBridge(s) {
   const steps = bridgeSteps(s);
-  const cats = steps.map(x => [NARROW() ? (SHORT[x.n] || x.n) : x.n, signedM(x)]);
-  S.narrow = NARROW();
-  const data = steps.map(x => ({ x: x.n, y: [Math.min(x.a, x.b), Math.max(x.a, x.b)], fillColor: x.c }));
+  const cats = steps.map(x => NARROW() ? (SHORT[x.n] || x.n) : x.n);
+  const data = steps.map(x => ({ x: NARROW() ? (SHORT[x.n] || x.n) : x.n, y: Math.abs(x.v), fillColor: x.c }));
   const box = $('#ch-bridge');
-  if (typeof ApexCharts === 'undefined') { box.replaceChildren(el('p', 'nochart', 'โหลดไลบรารีกราฟไม่ได้ — ตัวเลขและตารางยังใช้ได้')); S.dirty.bridge = false; return; }
+  if (typeof ApexCharts === 'undefined') {
+    box.replaceChildren(el('p', 'nochart', 'โหลดไลบรารีกราฟไม่ได้ — ตัวเลขและตารางยังใช้ได้'));
+    S.dirty.bridge = false;
+    return;
+  }
   if (!S.charts.bridge) {
     S.charts.bridge = new ApexCharts(box, {
-      chart: { type: 'rangeBar', height: 380, background: 'transparent', toolbar: { show: false }, fontFamily: FONT, foreColor: C.axis, parentHeightOffset: 0,
-        animations: { enabled: !reduce, speed: 650, dynamicAnimation: { enabled: !reduce, speed: 650 } },
-        events: { mounted: drawConn, updated: drawConn, animationEnd: drawConn } },
+      chart: {
+        type: 'bar', height: 380, background: 'transparent', toolbar: { show: false },
+        fontFamily: FONT, foreColor: C.axis, parentHeightOffset: 0,
+        animations: { enabled: !reduce, speed: 650, dynamicAnimation: { enabled: !reduce, speed: 650 } }
+      },
       series: [{ name: 'จำนวนเงิน', data }],
-      plotOptions: { bar: { horizontal: false, columnWidth: '46%', borderRadius: 4, borderRadiusApplication: 'end' } },
+      plotOptions: { bar: { horizontal: false, columnWidth: '52%', borderRadius: 5, borderRadiusApplication: 'end' } },
       dataLabels: { enabled: false },
-      xaxis: { categories: cats, axisBorder: { color: C.base }, axisTicks: { show: false }, labels: { style: { fontSize: '12.5px', colors: C.axis }, trim: false, rotate: 0, hideOverlappingLabels: false } },
-      yaxis: { min: 0, forceNiceScale: true, labels: { formatter: v => nf0.format(v / 1e6), style: { colors: C.axis, fontSize: '12px' } } },
+      xaxis: {
+        categories: cats, axisBorder: { color: C.base }, axisTicks: { show: false },
+        labels: { style: { fontSize: '12.5px', colors: C.axis }, trim: false, rotate: 0, hideOverlappingLabels: false }
+      },
+      yaxis: {
+        min: 0, forceNiceScale: true,
+        title: { text: 'ล้านบาท', style: { color: C.axis, fontSize: '12px', fontWeight: 400 } },
+        labels: { formatter: v => nf0.format(v / 1e6), style: { colors: C.axis, fontSize: '12px' } }
+      },
       grid: { borderColor: C.grid, strokeDashArray: 0, xaxis: { lines: { show: false } }, padding: { left: 2, right: 6 } },
       legend: { show: false },
       states: { hover: { filter: { type: 'lighten', value: 0.08 } } },
-      tooltip: { theme: 'light', custom: ({ dataPointIndex }) => {
-        const x = S.bridgeSteps[dataPointIndex]; if (!x) return '';
-        const kind = x.total ? 'ยอดรวม ณ จุดนี้' : (x.v >= 0 ? 'เพิ่ม' : 'ลด');
-        return '<div class="tt"><small>' + esc(x.n) + ' · ' + kind + '</small><br><b>' + (x.total ? '' : (x.v >= 0 ? '+' : '−')) + nf2.format(Math.abs(x.v)) + ' บาท</b>' +
-          (x.total ? '' : '<br><small>ยอดสะสมหลังขั้นนี้ ' + nf2.format(x.b) + '</small>') + '</div>';
-      } },
-      responsive: [{ breakpoint: 640, options: { chart: { height: 320 }, xaxis: { labels: { style: { fontSize: '10px' } } } } }]
+      tooltip: {
+        theme: 'light',
+        custom: ({ dataPointIndex }) => {
+          const x = S.bridgeSteps[dataPointIndex];
+          if (!x) return '';
+          const kind = x.total ? 'ยอดรวม' : (x.v >= 0 ? 'เงินเพิ่ม' : 'เงินลด');
+          return '<div class="tt"><small>' + esc(x.n) + ' · ' + kind + '</small><br><b>' +
+            (x.total ? '' : (x.v >= 0 ? '+' : '−')) + nf2.format(Math.abs(x.v)) +
+            ' บาท</b></div>';
+        }
+      },
+      responsive: [{ breakpoint: 640, options: { chart: { height: 320 }, plotOptions: { bar: { columnWidth: '58%' } }, xaxis: { labels: { style: { fontSize: '10px' } } } } }]
     });
     S.bridgeSteps = steps;
     S.charts.bridge.render();
@@ -1688,7 +1683,7 @@ addEventListener('keydown', e => { if (e.key === 'Escape' && S.segOn) hideSegTip
 let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => {
   if (!S.data) return;
   renderSeg(S.data, S.full);
-  if (!$('#panel-overview').hidden) { if (S.narrow !== NARROW()) renderBridge(S.data.summary); else drawConn(); }
+  if (!$('#panel-overview').hidden && S.narrow !== NARROW()) renderBridge(S.data.summary);
   else if (S.narrowC !== NARROW()) { renderCommitNotes(S.data, S.full, S.m); S.dirty.commit = true; paintCommitCharts(); }
 }, 150); });
 
