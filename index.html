@@ -490,7 +490,7 @@
   <div class="mt-5 max-w-full overflow-x-auto pb-1 no-print">
     <div class="tabs" role="tablist" aria-label="หมวดข้อมูล">
       <button id="tab-overview" class="tab" type="button" role="tab" aria-selected="true" aria-controls="panel-overview">ภาพรวมปีงบประมาณ</button>
-      <button id="tab-commit" class="tab" type="button" role="tab" aria-selected="false" aria-controls="panel-commit" tabindex="-1">ภาระผูกพันหลายปี</button>
+      <button id="tab-commit" class="tab" type="button" role="tab" aria-selected="false" aria-controls="panel-commit" tabindex="-1">ภาระผูกพันตั้งแต่ปี 2559 ถึงปัจจุบัน</button>
     </div>
   </div>
 
@@ -524,7 +524,7 @@
   <div id="panel-commit" role="tabpanel" aria-labelledby="tab-commit" tabindex="0" class="mt-4 grid grid-cols-1 gap-5" hidden>
 
     <section class="glass cmp p-4 sm:p-5" aria-labelledby="commit-title">
-      <h2 id="commit-title" class="card-t">ภาระผูกพันคงค้าง จำแนกตามปีงบประมาณของทุน</h2>
+      <h2 id="commit-title" class="card-t">ภาระผูกพันตั้งแต่ปี 2559 ถึงปัจจุบัน</h2>
       <p class="card-s">ตัวกรองนี้มีผลกับกราฟและตารางในแท็บนี้เท่านั้น — "เงินที่ใช้ได้จริง" และการ์ดสรุปด้านบนไม่เปลี่ยนตามตัวกรอง · ข้อมูล: <span id="commit-asof">—</span></p>
 
       <div class="fgrid mt-5">
@@ -909,8 +909,11 @@ const NOYEAR = 'ไม่ระบุปี';
 const yearKey = r => (r.fy == null ? NOYEAR : String(r.fy));
 
 function buildModel(d) {
-  const statuses = (d.statuses && d.statuses.length ? d.statuses : Object.keys(C.status)).slice();
+  let statuses = (d.statuses && d.statuses.length ? d.statuses : Object.keys(C.status)).slice();
   d.commit.forEach(r => { if (!statuses.includes(r.status)) statuses.push(r.status); });
+  // "ไม่ระบุสถานะ" ที่ไม่มียอดเลย (ว่างทุกปี) ไม่แสดงในตัวกรอง ตารางสรุป และกราฟ — ถ้ามีรายการเมื่อไรจะกลับมาแสดงเอง
+  const unkSum = d.commit.reduce((a, r) => a + (r.status === UNKNOWN ? Math.abs(r.amount) : 0), 0);
+  if (unkSum < 0.004) statuses = statuses.filter(x => x !== UNKNOWN);
   const yearsNum = [...new Set(d.commit.filter(r => r.fy != null).map(r => r.fy))].sort((a, b) => a - b);
   const years = yearsNum.map(String);
   if (d.commit.some(r => r.fy == null)) years.push(NOYEAR);
@@ -984,6 +987,8 @@ function render(d) {
   S.dirty = S.dirty || {};
   document.title = 'Research fund — รายงานกองทุนวิจัยปี ' + d.fy;
   $('#fy-label').textContent = 'ปีงบประมาณ ' + d.fy;
+  const spanLabel = 'ภาระผูกพันตั้งแต่ปี ' + full.minYear + ' ถึงปัจจุบัน';   // ปีเริ่มต้นอ่านจากข้อมูลจริง
+  $('#tab-commit').textContent = spanLabel; $('#commit-title').textContent = spanLabel;
 
   renderHero(d, full);
   renderKpis(d, full);
