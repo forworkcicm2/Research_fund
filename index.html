@@ -22,16 +22,13 @@
 <style>
   :root {
     color-scheme: light;
-    /* ตัวอักษร */
     --ink: #14121f;
     --ink2: #52514e;
     --axis: #6a6964;
     --hair: rgba(20, 18, 31, .10);
-    /* เงินเข้า = ฟ้า, เงินออก = ส้ม (ใช้ตรงกันทุกส่วนของหน้า) */
     --in: #2a78d6;
     --out: #eb6834;
     --neutral: #898781;
-    /* สถานะภาระผูกพัน */
     --usable: #1baf7a;
     --st-wait-research: #6250d6;
     --st-wait-docs: #eda100;
@@ -59,35 +56,6 @@
     border: 1px solid rgba(20, 18, 31, .10);
     border-radius: 28px;
     box-shadow: 0 1px 2px rgba(20, 18, 31, .04), 0 8px 28px rgba(20, 18, 31, .07);
-  }
-
-  /* ===== พิมพ์ / ส่งออก PDF: A4 แนวตั้ง ย่อให้พอดีความกว้างกระดาษ ไม่มีวันที่/เวลา/ชื่อหน้าที่มุมกระดาษ =====
-     @page margin: 0 ทำให้เบราว์เซอร์ไม่พิมพ์ header/footer (วันที่ เวลา ชื่อหน้า URL)
-     ขอบกระดาษ 10 มม. ทำด้วย padding ของ #page แทน (ซ้ำทุกหน้าด้วย box-decoration-break: clone) */
-  @page { size: A4 portrait; margin: 0; }
-  @media print {
-    html, body { background: #fff !important; width: 210mm; margin: 0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    body::before { display: none !important; }
-    *, *::before, *::after { animation: none !important; transition: none !important; }
-    #page {
-      width: 210mm; max-width: none !important; margin: 0 !important; box-sizing: border-box;
-      padding: 10mm !important; overflow: hidden;
-      -webkit-box-decoration-break: clone; box-decoration-break: clone;
-    }
-    /* ซ่อนส่วนที่โต้ตอบได้ ไม่มีความหมายบนกระดาษ */
-    .no-print, .tabs, .hdr-r, #seg-tip, .apexcharts-toolbar, .apexcharts-tooltip, .st-hint, .n-act, .lg-go,
-    .fgrid, #v-toggle, #f-clear, #foot { display: none !important; }
-    .glass { box-shadow: none !important; border: 1px solid #d9d7e0 !important; }
-    .glass, .notice, .scope, .fsum, .tile, .kpi, table, tr, .ranked > li { break-inside: avoid; page-break-inside: avoid; }
-    .overflow-x-auto { overflow: visible !important; }
-    .tbl { min-width: 0 !important; }
-    .logo { box-shadow: none !important; }
-    .lg-btn { cursor: default; }
-    /* เนื้อหาถูกย่อด้วย zoom จากความกว้างบนจอ (ตั้งใน JS) เลยบังคับผังแบบจอกว้างให้เหมือนบนจอคอมพิวเตอร์ */
-    .print-wide .top { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr); }
-    .print-wide .top > .hero { grid-column: auto; }
-    .print-wide #tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    .print-wide #panel-overview > section.grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 
   .hdr-l { display: flex; align-items: center; gap: 1rem; }
@@ -120,7 +88,6 @@
   .btn:disabled { opacity: .55; cursor: progress; }
   :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 
-  /* แถบหมายเหตุ: ไอคอน + ป้ายคำ ไม่พึ่งสีอย่างเดียว */
   .notice {
     display: flex; align-items: flex-start; gap: .75rem;
     padding: .75rem 1.1rem; border-radius: 18px; font-size: .9rem; line-height: 1.55;
@@ -137,7 +104,6 @@
   .n-crit .n-ic { background: #d03b3b; color: #fff; }
   .n-tag { font-weight: 700; margin-right: .4rem; }
 
-  /* ตัวเลขเด่น */
   .hero-fig {
     font-size: clamp(2rem, 9.6vw, 4.75rem); font-weight: 700; line-height: 1.05; letter-spacing: -.02em;
     margin-top: .35rem; font-variant-numeric: proportional-nums; overflow-wrap: anywhere;
@@ -149,7 +115,6 @@
   .legend { display: flex; flex-wrap: wrap; gap: .35rem 1.1rem; margin-top: .85rem; font-size: .8125rem; color: var(--ink2); list-style: none; padding: 0; }
   .legend .key { margin-right: .4rem; }
 
-  /* ตารางจัดอันดับ (แท่งบาง) */
   .ranked { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: 1.05rem; }
   .rk-top { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; font-size: .9rem; line-height: 1.45; }
   .rk-n { flex: 1; min-width: 0; }
@@ -158,7 +123,6 @@
   .rk-bar { margin-top: .4rem; height: 10px; background: rgba(20, 18, 31, .07); border-radius: 0 4px 4px 0; }
   .rk-bar > i { display: block; height: 100%; width: 0; border-radius: 0 4px 4px 0; transition: width .7s cubic-bezier(.2, .8, .2, 1); }
 
-  /* ตารางข้อมูล */
   .tbl { width: 100%; border-collapse: collapse; font-size: .875rem; min-width: 640px; }
   .tbl th, .tbl td { padding: .6rem .75rem; text-align: right; border-bottom: 1px solid var(--hair); }
   .tbl th:first-child, .tbl td:first-child { text-align: left; }
@@ -167,7 +131,6 @@
   .tbl tfoot td { font-weight: 700; border-bottom: 0; border-top: 1px solid rgba(20, 18, 31, .35); }
   .tbl .zero { color: rgba(20, 18, 31, .42); }
 
-  /* ApexCharts */
   .apexcharts-tooltip { background: rgba(255, 255, 255, .97) !important; border: 1px solid rgba(20, 18, 31, .14) !important; box-shadow: 0 8px 28px rgba(50, 36, 100, .20) !important; color: var(--ink) !important; font-family: var(--font) !important; }
   .apexcharts-tooltip-title { background: rgba(20, 18, 31, .05) !important; border-bottom: 1px solid rgba(20, 18, 31, .10) !important; font-family: var(--font) !important; }
   .apexcharts-legend-text { color: var(--ink2) !important; font-family: var(--font) !important; }
@@ -181,7 +144,6 @@
     *, *::before, *::after { animation: none !important; transition: none !important; }
   }
 
-  /* ===== ขอบเขตข้อมูล · แท็บ · ตัวกรอง · สูตร ===== */
   [hidden] { display: none !important; }
 
   .scope {
@@ -242,7 +204,6 @@
   .tbl .tl { text-align: left; }
   .tbl td.empty { text-align: left; color: var(--ink2); font-style: italic; }
 
-  /* คำเตือนที่กดได้ + ป้ายผลกระทบ */
   .n-body { flex: 1; min-width: 0; }
   .n-row { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem .7rem; margin-top: .45rem; }
   .n-impact {
@@ -255,10 +216,8 @@
   }
   .n-act:hover { background: #2a2740; }
 
-  /* เลขปีบนแกนใช้ความกว้างตัวเลขเท่ากัน จะได้เรียงตรงกัน */
   .apexcharts-yaxis-label, .apexcharts-xaxis-label { font-variant-numeric: tabular-nums; }
 
-  /* ===== จัดหน้าบนแบบกะทัดรัด ===== */
   .cmp { border-radius: 20px; }
   .card-t { font-size: 1rem; }
   .card-s { font-size: .8125rem; }
@@ -296,7 +255,6 @@
   }
   .hero-asof { font-size: .75rem; line-height: 1.5; color: var(--ink2); }
 
-  /* ปุ่มพับ "ดูวิธีคำนวณ" */
   .formula.fstrip { margin-top: .4rem; padding: .1rem .5rem; border: 1px solid transparent; border-radius: 14px; }
   .formula.fstrip > summary { font-size: .8125rem; color: var(--ink2); padding: .15rem 0; }
   .formula.fstrip[open] { padding: .5rem .9rem .7rem; background: rgba(255, 255, 255, .72); border-color: rgba(70, 50, 120, .14); }
@@ -333,7 +291,6 @@
   .st-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 .75rem; }
   .st-hint { margin-top: .4rem; font-size: .6875rem; line-height: 1.5; color: var(--ink2); }
 
-  /* แถบสถานะแนวนอน */
   .seg-wrap { position: relative; }
   .seg { display: flex; gap: 2px; height: 28px; width: 100%; }
   .seg > button {
@@ -352,7 +309,6 @@
   .seg-tip .tt-h .key { margin-right: .45rem; }
   .seg-tip .tt-s { font-size: .8125rem; line-height: 1.45; color: var(--ink2); }
 
-  /* รายการใต้แท่ง */
   .legend2 { list-style: none; padding: 0; margin: .5rem 0 0; display: grid; gap: 0 1.5rem; }
   @media (min-width: 720px) { .legend2 { grid-auto-flow: column; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(var(--rows, 3), auto); } }
   .lg-row {
@@ -377,7 +333,6 @@
     .lg-go { grid-column: 3; }
   }
 
-  /* คำเตือน */
   .notice { padding: .45rem .8rem; border-radius: 14px; font-size: .8125rem; line-height: 1.5; gap: .6rem; }
   .n-ic { width: 20px; height: 20px; font-size: .72rem; }
   .n-body { display: flex; flex-wrap: wrap; align-items: center; gap: .2rem .8rem; }
@@ -387,12 +342,78 @@
   .n-act { font-size: .75rem; padding: .2rem .7rem; }
 
   .scope { padding: .4rem .9rem; border-radius: 14px; font-size: .75rem; gap: .1rem 1.4rem; }
+
+  /* =====================================================================
+     รายงาน PDF (A4 แนวตั้ง 1 หน้า) — ซ่อนบนหน้าจอ แสดงเฉพาะตอนพิมพ์
+     ===================================================================== */
+  #report { display: none; font-family: var(--font); color: var(--ink); font-size: 9.5pt; line-height: 1.42; background: #fff; }
+  #report * { box-sizing: border-box; }
+  #report.measuring { display: block; position: fixed; left: -10000px; top: 0; width: 210mm; visibility: hidden; padding: 11mm 12mm; }
+
+  .rp-head { display: flex; align-items: center; gap: 11px; padding-bottom: 9px; border-bottom: 2.5px solid #14121f; }
+  .rp-logo { flex: none; width: 42px; height: 42px; }
+  .rp-logo svg { width: 100%; height: 100%; display: block; }
+  .rp-title h1 { font-size: 17pt; font-weight: 700; line-height: 1.2; margin: 0; }
+  .rp-title p { margin: 1px 0 0; font-size: 9pt; color: var(--ink2); }
+  .rp-meta { margin-left: auto; text-align: right; font-size: 8.5pt; line-height: 1.5; color: var(--ink2); }
+  .rp-meta b { color: var(--ink); font-weight: 700; }
+
+  .rp-kpis { display: grid; grid-template-columns: 1.45fr 1fr 1fr; gap: 8px; margin-top: 11px; }
+  .rp-kpi { border: 1px solid #cfccd8; border-radius: 6px; padding: 7px 11px; }
+  .rp-kpi.main { background: #f3f1f8; border: 1.5px solid #14121f; }
+  .rp-kpi .l { font-size: 8.5pt; color: var(--ink2); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .rp-kpi .v { font-size: 15pt; font-weight: 700; line-height: 1.25; font-variant-numeric: tabular-nums; }
+  .rp-kpi.main .v { font-size: 20pt; }
+  .rp-kpi .v small { font-size: .55em; font-weight: 500; color: var(--ink2); margin-right: 3px; }
+  .rp-kpi .s { font-size: 8pt; color: var(--ink2); }
+  .rp-state { display: inline-block; padding: 0 7px; border-radius: 99px; font-size: 7.5pt; font-weight: 700; border: 1px solid; }
+  .rp-state.ok { background: #dff5ea; color: #0a3a29; border-color: #93d6b8; }
+  .rp-state.warn { background: #fff1c9; color: #4a3000; border-color: #f0c35a; }
+  .rp-state.bad { background: #fde3e3; color: #6a1010; border-color: #eba0a0; }
+
+  .rp-sec { margin-top: 13px; }
+  .rp-h { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 10.5pt; font-weight: 700; padding-bottom: 3px; border-bottom: 1px solid #cfccd8; margin-bottom: 5px; }
+  .rp-h span { font-size: 8pt; font-weight: 400; color: var(--ink2); }
+  .rp-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .rp-2 > div { min-width: 0; }
+
+  .rp-t { width: 100%; border-collapse: collapse; font-size: 8.5pt; }
+  .rp-t th, .rp-t td { padding: 3px 5px; border-bottom: 1px solid #e6e4ec; text-align: right; vertical-align: top; }
+  .rp-t th:first-child, .rp-t td:first-child { text-align: left; }
+  .rp-t thead th { font-weight: 700; color: var(--ink2); border-bottom: 1.5px solid #14121f; font-size: 8pt; vertical-align: bottom; }
+  .rp-t td.n { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .rp-t td.sg { text-align: center; color: var(--ink2); width: 14px; padding-left: 2px; padding-right: 2px; }
+  .rp-t tr.tot td { font-weight: 700; border-top: 1px solid #14121f; background: #f6f5fa; }
+  .rp-t .z { color: #a09eaa; }
+  .rp-t .mut { color: var(--ink2); font-size: 7.5pt; }
+  .rp-t .key { width: 8px; height: 8px; margin-right: 5px; }
+  .rp-bar { height: 4px; background: #ecebf1; margin-top: 2px; border-radius: 2px; }
+  .rp-bar i { display: block; height: 100%; border-radius: 2px; }
+
+  .rp-seg { display: flex; height: 15px; gap: 1px; border-radius: 3px; overflow: hidden; margin-bottom: 6px; }
+  .rp-seg i { display: block; height: 100%; }
+  .rp-note { font-size: 8pt; color: var(--ink2); line-height: 1.5; }
+  .rp-notes { margin: 0; padding: 0; list-style: none; }
+  .rp-notes li { font-size: 8pt; line-height: 1.5; padding: 2px 0 2px 12px; position: relative; }
+  .rp-notes li::before { content: '•'; position: absolute; left: 2px; }
+  .rp-foot { margin-top: 12px; padding-top: 5px; border-top: 1px solid #cfccd8; font-size: 7.5pt; color: var(--ink2); display: flex; justify-content: space-between; gap: 10px; }
+
+  /* พิมพ์: A4 แนวตั้ง 1 หน้า ไม่มีวันที่/เวลา/ชื่อหน้า/URL ที่มุมกระดาษ (margin: 0) */
+  @page { size: A4 portrait; margin: 0; }
+  @media print {
+    html, body { background: #fff !important; margin: 0 !important; padding: 0 !important; width: 210mm; height: 296mm; overflow: hidden; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body::before { display: none !important; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    #screen { display: none !important; }
+    #report { display: block !important; width: 210mm; height: 296mm; padding: 11mm 12mm; overflow: hidden; break-after: avoid; page-break-after: avoid; }
+    #rp-in { break-inside: avoid; }
+  }
 </style>
 </head>
 
 <body class="antialiased">
+<div id="screen">
 <div id="page" class="mx-auto max-w-[1200px] px-4 py-4 sm:px-6 sm:py-6">
-<div id="fit">
 
   <!-- หัวหน้า + สถานะการเชื่อมต่อ -->
   <header class="glass cmp hdr">
@@ -409,14 +430,13 @@
         <span id="live-text">กำลังเชื่อมต่อ…</span>
       </div>
       <button id="btn-refresh" class="btn no-print" type="button">รีเฟรชตอนนี้</button>
-      <button id="btn-pdf" class="btn no-print" type="button" title="เปิดหน้าต่างพิมพ์ แล้วเลือก 'บันทึกเป็น PDF' (A4 แนวตั้ง)">พิมพ์ PDF</button>
+      <button id="btn-pdf" class="btn no-print" type="button" title="สร้างรายงาน A4 แนวตั้ง 1 หน้า แล้วเลือก 'บันทึกเป็น PDF'">ส่งออก PDF</button>
       <button id="btn-xlsx" class="btn no-print" type="button" title="ดาวน์โหลดตัวเลขทั้งหมดเป็นไฟล์ Excel">ส่งออก Excel</button>
     </div>
   </header>
 
   <div id="status-banner" class="mt-4 grid gap-2"></div>
 
-  <!-- ตัวเลขหลัก เรียงตามความสำคัญ: เงินใช้ได้จริง > ภาระผูกพัน > เงินสะสมกองทุน > สถานะงบ > ลิงก์ดูรายการ -->
   <div class="top mt-3">
     <section class="glass cmp hero" aria-labelledby="hero-l">
       <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
@@ -457,10 +477,8 @@
     <p class="st-hint">ชี้หรือแตะที่แท่งเพื่อดูจำนวนเงิน · กดสถานะที่มี › เพื่อดูรายการในแท็บภาระผูกพัน</p>
   </section>
 
-  <!-- คำเตือนจากข้อมูล -->
   <div id="notices" class="mt-3 grid gap-2"></div>
 
-  <!-- ขอบเขตของตัวเลขทั้งหน้า -->
   <div id="scope" class="scope mt-3" role="group" aria-label="ขอบเขตของข้อมูลในหน้านี้">
     <span>รายรับ–รายจ่าย: <b id="scope-ie">—</b></span>
     <span>ภาระผูกพัน: <b id="scope-c">—</b></span>
@@ -469,7 +487,6 @@
   <h2 class="sec-h">ที่มาของเงินสะสมกองทุน</h2>
   <section id="tiles" class="mt-2 grid grid-cols-2 gap-3 lg:grid-cols-4" aria-label="ที่มาของเงินสะสมกองทุน"></section>
 
-  <!-- แท็บ -->
   <div class="mt-5 max-w-full overflow-x-auto pb-1 no-print">
     <div class="tabs" role="tablist" aria-label="หมวดข้อมูล">
       <button id="tab-overview" class="tab" type="button" role="tab" aria-selected="true" aria-controls="panel-overview">ภาพรวมปีงบประมาณ</button>
@@ -477,7 +494,6 @@
     </div>
   </div>
 
-  <!-- แท็บ 1: ภาพรวม -->
   <div id="panel-overview" role="tabpanel" aria-labelledby="tab-overview" tabindex="0" class="mt-4 grid grid-cols-1 gap-5">
     <article class="glass cmp p-4 sm:p-5">
       <h2 class="card-t">จากยอดยกมาถึงเงินที่ใช้ได้จริง</h2>
@@ -505,7 +521,6 @@
     </section>
   </div>
 
-  <!-- แท็บ 2: ภาระผูกพันหลายปี -->
   <div id="panel-commit" role="tabpanel" aria-labelledby="tab-commit" tabindex="0" class="mt-4 grid grid-cols-1 gap-5" hidden>
 
     <section class="glass cmp p-4 sm:p-5" aria-labelledby="commit-title">
@@ -560,7 +575,7 @@
     </article>
 
     <section class="glass cmp p-4 sm:p-5">
-      <h2 class="card-t">ตารางสรุป</h2>
+      <h2 class="card-t">ตารางสรุป ปีของทุน × สถานะ</h2>
       <p class="card-s">หน่วย: บาท · ตัวเลขชุดเดียวกับกราฟด้านบน ตามตัวกรองที่เลือก</p>
       <div class="mt-3 overflow-x-auto"><table id="tbl" class="tbl"></table></div>
     </section>
@@ -576,6 +591,9 @@
 </div>
 </div>
 
+<!-- รายงานสำหรับพิมพ์ / PDF (สร้างด้วย JS ตอนกดส่งออก) -->
+<div id="report" aria-hidden="true"></div>
+
 <script>
 (() => {
 'use strict';
@@ -583,12 +601,13 @@
 /* ================= ตั้งค่า (แก้เฉพาะตรงนี้) ================= */
 const CFG = Object.assign({
   SHEET_ID: '1-aI2nfSZqVFZex66FU6Tmrr2327aGHRw6VnLxjIGZhI',   // รหัสชีต = ส่วนระหว่าง /d/ กับ /edit ในลิงก์ชีต (ชีตต้องแชร์แบบ "ทุกคนที่มีลิงก์ · ผู้ดู")
-  TABS: { raw: 'Research fund', summary: 'สรุป', income: 'รายรับ', expense: 'รายจ่าย', commit: 'ภาระผูกพัน' },   // ชื่อแท็บ (ใส่เลข gid ล้วน ๆ แทนชื่อได้)
+  TABS: { raw: 'Research fund', summary: 'สรุป', income: 'รายรับ', expense: 'รายจ่าย', commit: 'ภาระผูกพัน' },
   GVIZ_BASE: 'https://docs.google.com/spreadsheets/d/',
-  API_URL: '',                          // ไม่บังคับ: URL Web App ของ Apps Script (ถ้าใส่ จะอ่านผ่านนี้แทนการอ่านชีตตรง ๆ)
-  FALLBACK_URL: 'data.json',            // ข้อมูลสำรอง ใช้เมื่ออ่านชีตไม่ได้ตอนเปิดหน้า
-  REFRESH_MS: 30000,                    // ดึงข้อมูลใหม่ทุกกี่มิลลิวินาที
-  TIMEOUT_MS: 15000
+  API_URL: '',                          // ไม่บังคับ: URL Web App ของ Apps Script
+  FALLBACK_URL: 'data.json',            // ข้อมูลสำรอง
+  REFRESH_MS: 30000,
+  TIMEOUT_MS: 15000,
+  REPORT_TOP_N: 8                       // รายงาน PDF: แสดงรายรับ/รายจ่ายสูงสุดกี่รายการ ที่เหลือรวมเป็น "อื่น ๆ"
 }, window.RF_CONFIG || {});
 
 /* ================= ตัวช่วย ================= */
@@ -599,8 +618,8 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const nf2 = new Intl.NumberFormat('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const nf1 = new Intl.NumberFormat('th-TH', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const nf0 = new Intl.NumberFormat('th-TH', { maximumFractionDigits: 0 });
-const M = v => nf2.format(v / 1e6);                         // ล้านบาท 2 ตำแหน่ง
-const P = (a, b) => (b > 0 ? nf1.format(a / b * 100) : '—');  // ร้อยละ 1 ตำแหน่ง
+const M = v => nf2.format(v / 1e6);
+const P = (a, b) => (b > 0 ? nf1.format(a / b * 100) : '—');
 const FONT = "'Google Sans','Noto Sans Thai','Sarabun',system-ui,sans-serif";
 const timeStr = t => new Date(t).toLocaleTimeString('th-TH', { hour12: false });
 const dateTimeStr = t => new Date(t).toLocaleString('th-TH', { dateStyle: 'medium', timeStyle: 'medium', hour12: false });
@@ -609,11 +628,10 @@ const C = {
   in: '#2a78d6', out: '#eb6834', neutral: '#898781',
   usable: '#1baf7a',
   status: { 'ยุติทุน': '#e87ba4', 'รอเอกสารจากงานวิจัย': '#6250d6', 'รอเอกสารประกอบการเบิกจ่าย': '#eda100', 'ไม่ระบุสถานะ': '#898781' },
-  extra: '#e34948',                                        // สถานะใหม่ที่เพิ่มเองในชีต
+  extra: '#e34948',
   grid: '#e1e0d9', base: '#c3c2b7', axis: '#6a6964', ink: '#14121f', gap: '#fbf9fd'
 };
 const statusColor = s => C.status[s] || C.extra;
-/* สีตัวอักษรบนพื้นสี: เลือกขาว/ดำตามความเปรียบต่างที่มากกว่า */
 const lum = h => { const c = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255).map(v => (v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4))); return .2126 * c[0] + .7152 * c[1] + .0722 * c[2]; };
 const inkOn = h => { const L = lum(h) + .05; return 1.05 / L >= L / (lum('#0b0b0b') + .05) ? '#ffffff' : '#0b0b0b'; };
 
@@ -633,7 +651,7 @@ async function fetchText(url, htmlMsg, forbidMsg) {
     const r = await fetch(url + (url.includes('?') ? '&' : '?') + 't=' + Date.now(), { cache: 'no-store', signal: ctl.signal });
     if (!r.ok) throw new Error([401, 403, 404].includes(r.status) ? forbidMsg + ' (HTTP ' + r.status + ')' : 'HTTP ' + r.status);
     const body = await r.text();
-    if (/^\s*(<!doctype|<html|<\?php)/i.test(body)) throw new Error(htmlMsg);   // ได้หน้า HTML (เช่น หน้าล็อกอิน) แทนข้อมูล
+    if (/^\s*(<!doctype|<html|<\?php)/i.test(body)) throw new Error(htmlMsg);
     return body;
   } catch (e) {
     if (e.name === 'AbortError') throw new Error('หมดเวลารอข้อมูล (' + CFG.TIMEOUT_MS / 1000 + ' วินาที)');
@@ -675,16 +693,15 @@ function parseCsv(text) {
   return rows;
 }
 
-/* gviz = ช่องทางสาธารณะของ Google Sheets (ไม่ต้องล็อกอิน ขอแค่ชีตแชร์แบบ "ทุกคนที่มีลิงก์") ส่งกลับเป็น CSV ตามค่าที่แสดงในชีต */
 async function gviz(tab, headers) {
   const sel = /^\d+$/.test(String(tab)) ? 'gid=' + tab : 'sheet=' + encodeURIComponent(tab);
   const url = CFG.GVIZ_BASE + encodeURIComponent(CFG.SHEET_ID) + '/gviz/tq?tqx=out:csv&headers=' + headers + '&' + sel;
   const grid = parseCsv((await fetchText(url, HINT_PRIVATE, HINT_PRIVATE)).replace(/^﻿/, ''));
-  if (grid.length && grid[0].every(c => txt(c) === '')) grid.shift();   // บรรทัดป้ายคอลัมน์ว่างที่ gviz ใส่มา
+  if (grid.length && grid[0].every(c => txt(c) === '')) grid.shift();
   return grid;
 }
 
-/* ---------- อ่านตารางเดิม (ตารางซ้อนกันในแท็บ "Research fund") ---------- */
+/* ---------- อ่านตารางเดิม ---------- */
 function parseRaw(grid) {
   const warnings = [], n = grid.length, A = i => txt((grid[i] || [])[0]);
   const stated = {};
@@ -705,7 +722,7 @@ function parseRaw(grid) {
   const income = readRawList(grid, 'ตารางรายรับจริง', warnings);
   const expense = readRawList(grid, 'ตารางรายจ่ายจริง', warnings);
 
-  let c0 = -1;   // ตารางภาระผูกพัน = แถวที่ขึ้นต้น "ภาระผูกพัน" และแถวถัดไปคือ "ปีงบประมาณ"
+  let c0 = -1;
   for (i = 0; i < n - 1; i++) if (A(i).indexOf('ภาระผูกพัน') === 0 && A(i + 1) === 'ปีงบประมาณ') { c0 = i; break; }
   if (c0 < 0) throw new Error('ไม่พบตารางภาระผูกพัน (แถว "ปีงบประมาณ")');
   const head = grid[c0 + 1];
@@ -721,10 +738,10 @@ function parseRaw(grid) {
     let yv = num(grid[i][0]), rowSum = 0, any = false;
     const parts = [];
     cols.forEach(col => { const a = num(grid[i][col.c]); if (a !== null && a !== 0) { any = true; rowSum += a; parts.push({ status: col.status, amount: r2(a) }); } });
-    if (!any) continue;   // แถวว่าง / 0.00 ทั้งแถว
+    if (!any) continue;
     if (yv === null) noYear.push(i + 1);
     else {
-      yv = Math.round(yv);   // "2,561.00" -> 2561
+      yv = Math.round(yv);
       if (yv < 2400 || yv > 2700) warnings.push({ level: 'warn', text: 'ตารางเดิมแถวที่ ' + (i + 1) + ' ปี ' + yv + ' ดูไม่ใช่ปี พ.ศ.' });
     }
     const rowTotal = num(grid[i][sumCol]);
@@ -765,7 +782,7 @@ function fromRaw(p) {
   const warnings = p.warnings.slice();
   let carry = p.stated.carry;
   if (carry === undefined) { carry = 0; warnings.push({ level: 'warn', text: 'ไม่พบ "ยอดยกมา" ในตารางเดิม ใช้ 0' }); }
-  const fund = r2(carry + income - spent), other = 0;   // ไม่มียอดหักอื่น: เงินสะสม = ยกมา + รายรับ − รายจ่าย
+  const fund = r2(carry + income - spent), other = 0;
   return {
     source: 'raw', fy: p.fy,
     summary: { carry: r2(carry), income, available: r2(carry + income), spent, other, fund: r2(fund), commit, usable: r2(fund - commit) },
@@ -773,12 +790,12 @@ function fromRaw(p) {
   };
 }
 
-/* ---------- อ่านแท็บข้อมูลสะอาด (สรุป · รายรับ · รายจ่าย · ภาระผูกพัน) ---------- */
+/* ---------- อ่านแท็บข้อมูลสะอาด ---------- */
 function fromTidy(g) {
   const hdr = (grid, test) => { for (let i = 0; i < Math.min(grid.length, 4); i++) if (test(grid[i])) return i; return -1; };
   const hs = hdr(g.summary, r => txt(r[0]) === 'key'), hi = hdr(g.income, r => txt(r[0]) === 'รายการ'),
         he = hdr(g.expense, r => txt(r[0]) === 'รายการ'), hc = hdr(g.commit, r => txt(r[1]) === 'สถานะ');
-  if (hs < 0 || hi < 0 || he < 0 || hc < 0) return null;   // ไม่ใช่แท็บสะอาด
+  if (hs < 0 || hi < 0 || he < 0 || hc < 0) return null;
   const warnings = [], T = CFG.TABS, S = {};
   let asOfDate = null;
   g.summary.forEach((r, i) => { if (i <= hs) return; const k = txt(r[0]); if (!k) return; if (k === 'asof') { asOfDate = txt(r[2]) || null; return; } S[k] = num(r[2]); });
@@ -814,7 +831,6 @@ function fromTidy(g) {
   };
 }
 
-/* เติมสถานะที่พบจริง และคำเตือนที่คำนวณจากข้อมูล */
 function finish(d) {
   const statuses = ['ยุติทุน', 'รอเอกสารจากงานวิจัย', 'รอเอกสารประกอบการเบิกจ่าย', UNKNOWN];
   d.commit.forEach(r => { if (!statuses.includes(r.status)) statuses.push(r.status); });
@@ -827,11 +843,10 @@ function finish(d) {
   return d;
 }
 
-/* อ่านชีตสาธารณะ: มีแท็บสะอาดครบ -> ใช้แท็บสะอาด ไม่งั้นอ่านตารางเดิมโดยตรง */
 async function readSheet() {
   const T = CFG.TABS;
   let sum = null;
-  try { sum = await gviz(T.summary, 1); } catch (_) { /* ไม่มีแท็บ/อ่านไม่ได้ -> ลองตารางเดิม */ }
+  try { sum = await gviz(T.summary, 1); } catch (_) { /* ลองตารางเดิม */ }
   if (sum && sum.some(r => txt(r[0]) === 'key')) {
     const [income, expense, commit] = await Promise.all([gviz(T.income, 1), gviz(T.expense, 1), gviz(T.commit, 1)]);
     const d = fromTidy({ summary: sum, income, expense, commit });
@@ -849,13 +864,13 @@ function validate(d) {
   if (d.ok === false) throw new Error(d.error || 'API แจ้งว่าอ่านชีตไม่สำเร็จ');
   const s = d.summary;
   if (!s) throw new Error('ข้อมูลไม่มี summary');
-  if (s.other === undefined || s.other === null) s.other = 0;   // ไม่มียอดหักอื่นแล้ว
+  if (s.other === undefined || s.other === null) s.other = 0;
   for (const k of ['carry', 'income', 'available', 'spent', 'other', 'fund', 'commit', 'usable'])
     if (!Number.isFinite(s[k])) throw new Error('summary.' + k + ' ไม่ใช่ตัวเลข');
   if (!Number.isFinite(d.fy)) throw new Error('ไม่มีปีงบประมาณ');
   for (const k of ['income', 'expense', 'commit']) if (!Array.isArray(d[k])) throw new Error(k + ' ไม่ใช่รายการ');
   d.warnings = Array.isArray(d.warnings) ? d.warnings : [];
-  d.asOfDate = d.asOfDate || d.asof || null;   // วันที่ตัดยอด (ไม่บังคับ) ต้องมาจากชีต ไม่ใช่เวลาสร้างไฟล์
+  d.asOfDate = d.asOfDate || d.asof || null;
   return d;
 }
 
@@ -893,7 +908,6 @@ function apply(d) {
 const NOYEAR = 'ไม่ระบุปี';
 const yearKey = r => (r.fy == null ? NOYEAR : String(r.fy));
 
-/* แบบจำลองเต็ม (ไม่ผ่านตัวกรอง) ใช้กับการ์ดสรุป แท่งสัดส่วน ตัวเลือกตัวกรอง และส่งออก Excel */
 function buildModel(d) {
   const statuses = (d.statuses && d.statuses.length ? d.statuses : Object.keys(C.status)).slice();
   d.commit.forEach(r => { if (!statuses.includes(r.status)) statuses.push(r.status); });
@@ -908,18 +922,14 @@ function buildModel(d) {
   return { statuses, years, yearsNum, mx, yearTot, statusTot, minYear: yearsNum.length ? yearsNum[0] : d.fy };
 }
 
-/* ตัวกรองของแท็บภาระผูกพัน (null = ทั้งหมด) มีผลเฉพาะแท็บนั้น ไม่แตะการ์ดสรุป */
 const F = { years: null, statuses: null, view: 'total', sort: 'yearDesc' };
 const filterActive = () => !!(F.years || F.statuses);
 function filterRows(d) {
   return d.commit.filter(r => (!F.years || F.years.has(yearKey(r))) && (!F.statuses || F.statuses.has(r.status)));
 }
-/* ชุดปีของทางลัด "ก่อนปีรายงาน" = ปีที่ระบุได้และน้อยกว่าปีรายงาน (ไม่รวม "ไม่ระบุปี") */
 const prevYears = (full, fy) => full.yearsNum.filter(y => y < fy).map(String);
 const sameSet = (set, arr) => !!set && set.size === arr.length && arr.every(x => set.has(x));
 
-/* แบบจำลองหลังกรอง ใช้กับกราฟ ตาราง และยอดตามตัวกรอง
-   kind: val = มียอด · none = ปีนี้มีในชุดข้อมูลแต่ไม่ตรงตัวกรอง · gap = ปีนี้ไม่มีแถวเลยในชุดข้อมูล */
 function buildView(d, full) {
   const rows = filterRows(d);
   const statuses = F.statuses ? full.statuses.filter(s => F.statuses.has(s)) : full.statuses.slice();
@@ -982,7 +992,6 @@ function render(d) {
   renderSeg(d, full);
   renderTiles(d, full);
 
-  /* แท็บภาพรวม */
   renderRanked($('#list-inc'), d.income, C.in);
   renderRanked($('#list-exp'), d.expense, C.out);
   const inTot = d.income.reduce((a, x) => a + x.amount, 0), exTot = d.expense.reduce((a, x) => a + x.amount, 0);
@@ -990,7 +999,6 @@ function render(d) {
   $('#exp-sub').textContent = 'รวม ' + nf2.format(exTot) + ' บาท · ' + d.expense.length + ' หมวด · เรียงจากมากไปน้อย';
   S.dirty.bridge = true;
 
-  /* แท็บภาระผูกพันหลายปี */
   S.dirty.commit = true;
   renderCommitTab();
 
@@ -1000,7 +1008,6 @@ function render(d) {
   $('#foot').textContent = 'ดึงข้อมูลใหม่ทุก ' + CFG.REFRESH_MS / 1000 + ' วินาที';
 }
 
-/* กราฟสร้างและอัปเดตเฉพาะตอนที่แท็บของมันมองเห็นอยู่ (กล่องที่ซ่อนกว้าง 0 จะวาดผิด) */
 function paintVisible() {
   if (!S.data) return;
   if (S.tab === 'commit') { if (S.dirty.commit) paintCommitCharts(); }
@@ -1016,11 +1023,10 @@ function showTab(name) {
   });
   try { history.replaceState(null, '', t === 'commit' ? '#commit' : location.pathname + location.search); } catch (_) { /* ไม่เป็นไร */ }
   paintVisible();
-  requestAnimationFrame(() => dispatchEvent(new Event('resize')));   // ให้กราฟที่เพิ่งโผล่ปรับขนาดตามกล่อง
+  requestAnimationFrame(() => dispatchEvent(new Event('resize')));
 }
 const jump = node => { node.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); };
 
-/* --- ขอบเขตของข้อมูล และวันที่ตัดยอด --- */
 function renderScope(d, full) {
   $('#scope-ie').textContent = 'ปีงบประมาณ ' + d.fy + ' ปีเดียว';
   const yrs = full.yearsNum;
@@ -1028,7 +1034,6 @@ function renderScope(d, full) {
     ? 'ทุกปีของทุนที่ยังค้าง (' + (yrs.length > 1 ? yrs[0] + '–' + yrs[yrs.length - 1] : yrs[0]) + ')' + (full.years.includes(NOYEAR) ? ' + ไม่ระบุปี' : '')
     : 'ไม่มีรายการ';
 }
-/* วันที่ตัดยอดมาจากชีตเท่านั้น (key asof) */
 function asofText() {
   const d = S.data;
   if (!d) return '—';
@@ -1047,9 +1052,9 @@ function renderAsof() {
   [['#hero-asof', heroAsofText()], ['#commit-asof', asofText()]].forEach(([id, t]) => { const n = $(id); if (n && n.textContent !== t) n.textContent = t; });
 }
 
-/* --- วิธีคำนวณ (ตารางพับ) --- */
-function renderFormula(d, full) {
-  const s = d.summary, t = $('#formula-tbl'); t.replaceChildren();
+/* --- วิธีคำนวณ (ใช้ร่วมกันทั้งหน้าจอและรายงาน PDF) --- */
+function formulaRows(d, full) {
+  const s = d.summary;
   const unk = full.statusTot[UNKNOWN] || 0, closed = full.statusTot['ยุติทุน'] || 0;
   const rows = [
     ['', 'ยอดยกมา ปี ' + (d.fy - 1), s.carry, ''],
@@ -1064,6 +1069,11 @@ function renderFormula(d, full) {
     (closed > 0.004 ? ' (ในนี้ยุติทุน ' + nf2.format(closed) + ' บาท)' : '') +
     (unk > 0.004 ? ' · ในนี้ ' + nf2.format(r2(unk)) + ' บาทยังไม่ระบุสถานะ (ไม่กระทบยอดรวม)' : '')]);
   rows.push(['=', 'เงินที่ใช้ได้จริง', s.usable, 'เงินสะสมกองทุน − ภาระผูกพันทั้งหมด', 1]);
+  return rows;
+}
+function renderFormula(d, full) {
+  const t = $('#formula-tbl'); t.replaceChildren();
+  const rows = formulaRows(d, full);
   const th = el('thead'), hr = el('tr');
   ['', 'รายการ', 'จำนวน (บาท)', 'หมายเหตุ / ผลต่อยอด'].forEach(h => hr.appendChild(el('th', '', h)));
   th.appendChild(hr); t.appendChild(th);
@@ -1080,7 +1090,8 @@ function goFormula() {
   jump(f);
   f.querySelector('summary').focus({ preventScroll: true });
 }
-/* --- แท่งแบ่งสัดส่วน: เงินสะสมกองทุน = ใช้ได้จริง + ภาระผูกพันแยกสถานะ --- */
+
+/* --- แท่งแบ่งสัดส่วน --- */
 const SEG_ORDER = ['รอเอกสารจากงานวิจัย', 'ไม่ระบุสถานะ', 'รอเอกสารประกอบการเบิกจ่าย', 'ยุติทุน'];
 function segParts(d, m) {
   const s = d.summary;
@@ -1093,7 +1104,6 @@ function segParts(d, m) {
 
 function renderSeg(d, m) {
   const s = d.summary, live = segParts(d, m), total = live.reduce((a, p) => a + p.val, 0);
-  /* ปกติส่วนแบ่งคิดจากเงินสะสมกองทุน แต่ถ้าภาระผูกพันสูงกว่าเงินสะสม ฐานคือภาระผูกพันทั้งหมด */
   const over = s.usable < -0.004, den = over ? 'ภาระผูกพันทั้งหมด' : 'เงินสะสมกองทุน';
   $('#seg-title').textContent = over
     ? 'ภาระผูกพันทั้งหมด ' + nf2.format(s.commit) + ' บาท (สูงกว่าเงินสะสมกองทุน) แบ่งตามสถานะ'
@@ -1116,7 +1126,6 @@ function renderSeg(d, m) {
   seg.hidden = !live.length;
   seg.setAttribute('aria-label', 'สัดส่วนเงินสะสมกองทุน: ' + desc.join(', '));
 
-  /* รายการใต้แท่ง (สร้างใหม่เฉพาะตอนชุดสถานะเปลี่ยน เพื่อไม่ให้โฟกัสหลุด) */
   const lg = $('#seg-legend'), sig = live.map(p => p.name + (p.link ? '>' : '')).join('|');
   lg.style.setProperty('--rows', Math.max(Math.ceil(live.length / 2), 1));
   if (lg._sig !== sig) {
@@ -1142,7 +1151,6 @@ function renderSeg(d, m) {
   if (S.segOn) { if (seg.contains(S.segOn)) showSegTip(S.segOn); else hideSegTip(); }
 }
 
-/* --- tooltip ของแถบสถานะ: ชี้ = ดูชั่วคราว · แตะ/คลิก = ปักไว้ (แตะซ้ำ, แตะที่อื่น หรือ Esc = ปิด) --- */
 function showSegTip(b) {
   const tip = $('#seg-tip'), i = b._info; if (!i) return;
   tip.replaceChildren();
@@ -1162,7 +1170,6 @@ function hideSegTip() {
   if (S.segOn) { S.segOn.classList.remove('pin'); S.segOn.removeAttribute('aria-describedby'); }
   tip.hidden = true; S.segOn = null; S.segPin = false;
 }
-/* ปุ่มในรายการสถานะ -> แท็บภาระผูกพัน กรองเหลือสถานะนั้นทันที */
 function goStatus(st) {
   F.years = null; F.statuses = new Set([st]);
   showTab('commit');
@@ -1171,7 +1178,6 @@ function goStatus(st) {
 }
 const goUnknown = () => goStatus(UNKNOWN);
 
-/* --- ป้ายสถานะใต้ "เงินที่ใช้ได้จริง" --- */
 function heroState(d, full) {
   const s = d.summary, unk = full.statusTot[UNKNOWN] || 0, closed = full.statusTot['ยุติทุน'] || 0;
   if (s.usable < -0.004) return { k: 'bad', ic: '!', t: 'ภาระผูกพันเกินเงินสะสม', why: 'ภาระผูกพันทั้งหมดสูงกว่าเงินสะสมกองทุนอยู่ ' + nf2.format(r2(-s.usable)) + ' บาท' };
@@ -1185,7 +1191,7 @@ function heroState(d, full) {
   }
   return { k: 'ok', ic: '✓', t: 'พร้อมจัดสรร', why: 'ภาระผูกพันทุกรายการระบุสถานะแล้ว และไม่มียอดหักอื่นที่ไม่ทราบที่มา' };
 }
-S.heroState = heroState;   // ให้การทดสอบเรียกตรง ๆ ได้
+S.heroState = heroState;
 
 function renderHero(d, full) {
   const s = d.summary, st = heroState(d, full), b = $('#hero-badge');
@@ -1198,7 +1204,6 @@ function renderHero(d, full) {
   b.setAttribute('aria-label', st.t + ': ' + st.why);
 }
 
-/* --- การ์ด KPI สองใบ: ภาระผูกพัน และเงินสะสมกองทุน --- */
 function renderKpis(d, m) {
   const s = d.summary;
   tween($('#kpi-commit-v'), s.commit, nf2.format);
@@ -1210,7 +1215,6 @@ function renderKpis(d, m) {
   $('#kpi-fund-s').textContent = Math.abs(s.other) > 0.004 ? 'หลังหักรายจ่ายและยอดหักอื่น' : 'หลังหักรายจ่าย';
 }
 
-/* --- ที่มาของเงินสะสมกองทุน: การ์ดเล็ก 4 ใบ --- */
 const TILES = [
   { k: 'carry', dot: C.in, l: d => 'ยอดยกมา ปี ' + (d.fy - 1), sub: () => 'ยกมาจากปีงบประมาณก่อน' },
   { k: 'income', dot: C.in, l: d => 'รายรับจริง ปี ' + d.fy, sub: d => d.income.length + ' รายการ' },
@@ -1224,7 +1228,7 @@ function renderTiles(d, m) {
       const a = el('article', 'glass tile');
       const lab = el('p', 'tile-l');
       if (t.dot) { const k = el('span', 'key'); k.style.background = t.dot; lab.appendChild(k); }
-      lab.appendChild(el('span'));   // ข้อความป้ายชื่อ (อยู่ท้ายสุดเสมอ)
+      lab.appendChild(el('span'));
       a.append(lab, el('p', 'tile-v'), el('p', 'tile-s')); a.dataset.k = t.k; box.appendChild(a);
     });
   }
@@ -1236,7 +1240,7 @@ function renderTiles(d, m) {
   });
 }
 
-/* --- กราฟแท่งเปรียบเทียบที่มาของเงินและยอดคงเหลือ --- */
+/* --- กราฟสะพานเงิน --- */
 const NARROW = () => innerWidth < 640;
 const SHORT = { 'ยอดยกมา': 'ยกมา', 'รายรับ': 'รายรับ', 'รายจ่าย': 'จ่าย', 'ยอดหักอื่น': 'หักอื่น', 'เงินสะสม': 'สะสม', 'ภาระผูกพัน': 'ผูกพัน', 'ใช้ได้จริง': 'ใช้ได้' };
 function bridgeSteps(s) {
@@ -1308,7 +1312,7 @@ function renderBridge(s) {
   S.dirty.bridge = false;
 }
 
-/* --- แท็บภาระผูกพันหลายปี: ตัวกรอง สรุปตามตัวกรอง กราฟ --- */
+/* --- แท็บภาระผูกพันหลายปี --- */
 const chip = (label, pressed, data, cls) => {
   const b = el('button', 'chip' + (cls ? ' ' + cls : ''));
   b.type = 'button'; b.setAttribute('aria-pressed', String(!!pressed));
@@ -1318,7 +1322,6 @@ const chip = (label, pressed, data, cls) => {
 };
 const SORT_LABEL = { yearDesc: 'ปีล่าสุดก่อน', yearAsc: 'ปีเก่าก่อน', amountDesc: 'ยอดมากไปน้อย' };
 
-/* ตัวเลือกปี/สถานะสร้างจากข้อมูลจริง สร้างใหม่เฉพาะตอนรายการตัวเลือกเปลี่ยน */
 function buildFilters(d, full) {
   const sig = JSON.stringify([full.years, full.statuses, d.fy]);
   if (sig !== S.fsig) {
@@ -1360,7 +1363,6 @@ function syncFilters(d, full) {
   $('#v-toggle').querySelectorAll('.chip').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === F.view)));
 }
 
-/* คลิกชิป: จาก "ทั้งหมด" การคลิกครั้งแรกคือเลือกเฉพาะอันนั้น คลิกซ้ำเพื่อเพิ่ม/เอาออก */
 function toggleIn(cur, v, allList) {
   const set = cur ? new Set(cur) : new Set();
   if (set.has(v)) set.delete(v); else set.add(v);
@@ -1394,7 +1396,6 @@ function syncViewToggle() { $('#v-toggle').querySelectorAll('.chip').forEach(b =
 function renderCommitTab() {
   const d = S.data, full = S.full;
   if (!d || !full) return;
-  /* ข้อมูลเปลี่ยนแล้วตัวกรองที่ชี้ไปยังค่าที่หายไปต้องถูกตัดออก */
   if (F.statuses) { const ok = new Set([...F.statuses].filter(s => full.statuses.includes(s))); F.statuses = ok.size ? ok : null; }
   if (F.years) { const ok = new Set([...F.years].filter(y => full.years.includes(y) || y === String(d.fy))); F.years = ok.size ? ok : null; }
   buildFilters(d, full);
@@ -1514,7 +1515,7 @@ function paintStack(m) {
   } else S.charts.stack.updateSeries(series, true);
 }
 
-/* --- รายการจัดอันดับ (แท่งบาง) --- */
+/* --- รายการจัดอันดับ --- */
 function renderRanked(ol, items, color) {
   const sorted = items.slice().sort((a, b) => b.amount - a.amount);
   const total = sorted.reduce((a, x) => a + x.amount, 0), max = sorted.length ? sorted[0].amount : 0;
@@ -1569,7 +1570,6 @@ function renderTable(m) {
   fr.appendChild(cell(m.total, true)); tf.appendChild(fr); t.appendChild(tf);
 }
 
-/* --- รายการรายแถว (ตารางแบบยาว) ตามตัวกรอง --- */
 function kindOf(r, fy) { return r.fy == null ? 'ไม่ระบุปี' : r.fy < fy ? 'ค้างจากปีก่อน' : r.fy === fy ? 'เกิดในปีที่รายงาน' : 'ปีหลังปีที่รายงาน'; }
 function renderDetail(m, d) {
   const t = $('#detail'); t.replaceChildren();
@@ -1600,7 +1600,7 @@ function renderDetail(m, d) {
   fr.append(l, v, el('td', '')); tf.appendChild(fr); t.appendChild(tf);
 }
 
-/* --- หมายเหตุจากข้อมูล: ป้ายผลกระทบ + ปุ่มพาไปดูรายการที่เกี่ยวข้อง --- */
+/* --- หมายเหตุจากข้อมูล --- */
 const LEVEL = { info: ['i', 'หมายเหตุ'], warn: ['!', 'ควรตรวจสอบ'], crit: ['!', 'ผิดปกติ'] };
 const IMPACT = { other: 'รวมในยอดแล้ว · รอตรวจสอบที่มา', unknown: 'รวมในยอดแล้ว · รอระบุสถานะ', neg: 'เงินที่ใช้ได้จริงติดลบ' };
 const ACTION = { other: ['ดูวิธีคำนวณ', () => goFormula()], unknown: ['ดูรายการที่ไม่ระบุสถานะ', () => goUnknown()], neg: ['ดูวิธีคำนวณ', () => goFormula()] };
@@ -1653,7 +1653,7 @@ setInterval(() => {
 }, 1000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden && Date.now() >= S.nextAt) load(); });
 
-/* ===== ตัวควบคุมหน้าจอ: แท็บ ตัวกรอง มุมมองกราฟ ===== */
+/* ===== ตัวควบคุมหน้าจอ ===== */
 S.tab = 'overview'; S.dirty = { bridge: true, commit: true };
 $('#tab-overview').addEventListener('click', () => showTab('overview'));
 $('#tab-commit').addEventListener('click', () => showTab('commit'));
@@ -1673,7 +1673,6 @@ $('#f-sort').addEventListener('change', e => { F.sort = e.target.value; renderCo
 $('#f-clear').addEventListener('click', clearFilters);
 if (location.hash === '#commit') showTab('commit');
 
-/* แถบสถานะ: ชี้/โฟกัส = ดูจำนวนเงินชั่วคราว · คลิก/แตะ = ปักไว้ (คลิกซ้ำ, คลิกที่อื่น หรือกด Esc = ปิด) */
 const segBox = $('#seg'), segBtn = e => e.target.closest && e.target.closest('#seg > button');
 segBox.addEventListener('mouseover', e => { const b = segBtn(e); if (b && b !== S.segOn) { S.segPin = false; showSegTip(b); } });
 segBox.addEventListener('mouseleave', () => { if (!S.segPin) hideSegTip(); });
@@ -1688,45 +1687,148 @@ document.addEventListener('click', () => { if (S.segPin) hideSegTip(); });
 addEventListener('keydown', e => { if (e.key === 'Escape' && S.segOn) hideSegTip(); });
 
 let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => {
-  if (!S.data || S.printing) return;   // ระหว่างพิมพ์ไม่วาดกราฟใหม่ (ความกว้างถูกล็อกไว้แล้ว)
+  if (!S.data || S.printing) return;
   renderSeg(S.data, S.full);
   if (!$('#panel-overview').hidden && S.narrow !== NARROW()) renderBridge(S.data.summary);
   else if (S.narrowC !== NARROW()) { renderCommitNotes(S.data, S.full, S.m); S.dirty.commit = true; paintCommitCharts(); }
 }, 150); });
 
 
-/* ================= พิมพ์ PDF (A4 แนวตั้ง) / ส่งออก Excel ================= */
+/* =====================================================================
+   รายงาน PDF: A4 แนวตั้ง 1 หน้า
+   - กดส่งออก -> สร้างเอกสารรายงานใน #report (ตัวเลขชุดเดียวกับหน้าจอ ไม่ขึ้นกับตัวกรอง)
+   - ถ้าเนื้อหาสูงเกินพื้นที่ 1 หน้า จะย่อสัดส่วนให้พอดีอัตโนมัติ
+   - @page margin: 0 => เบราว์เซอร์ไม่พิมพ์วันที่/เวลา/ชื่อหน้า/URL ที่มุมกระดาษ
+   ===================================================================== */
+const LOGO = '<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="rpg" x1="6" y1="4" x2="58" y2="60" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffb066"/><stop offset=".55" stop-color="#ec5f8f"/><stop offset="1" stop-color="#6552e0"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#rpg)"/><rect x="14" y="36" width="8" height="12" rx="3" fill="#fff" fill-opacity=".70"/><rect x="26" y="28" width="8" height="20" rx="3" fill="#fff" fill-opacity=".85"/><rect x="38" y="18" width="8" height="30" rx="3" fill="#fff"/><rect x="12" y="51" width="36" height="3" rx="1.5" fill="#fff" fill-opacity=".55"/><path d="M50 10l1.9 4.6 4.6 1.9-4.6 1.9L50 23l-1.9-4.6-4.6-1.9 4.6-1.9z" fill="#fff"/></svg>';
+const key = c => '<span class="key" style="background:' + c + '"></span>';
+
+/* รายการรายรับ/รายจ่าย: แสดง N อันดับแรก ที่เหลือรวมเป็น "อื่น ๆ" */
+function reportList(items, color) {
+  const sorted = items.slice().sort((a, b) => b.amount - a.amount);
+  const total = sorted.reduce((a, x) => a + x.amount, 0), N = CFG.REPORT_TOP_N;
+  let rows = sorted;
+  if (sorted.length > N) {
+    const rest = sorted.slice(N - 1);
+    rows = sorted.slice(0, N - 1).concat([{ name: 'อื่น ๆ (' + rest.length + ' รายการ)', amount: r2(rest.reduce((a, x) => a + x.amount, 0)), other: true }]);
+  }
+  const max = rows.reduce((a, x) => Math.max(a, x.amount), 0);
+  const body = rows.map(x => {
+    const w = max > 0 ? Math.max(x.amount / max * 100, x.amount > 0 ? 1 : 0) : 0;
+    return '<tr><td>' + esc(x.name) + '<div class="rp-bar"><i style="width:' + w + '%;background:' + (x.other ? '#a8a6b2' : color) + '"></i></div></td>' +
+      '<td class="n">' + nf2.format(x.amount) + '</td><td class="n mut">' + P(x.amount, total) + '%</td></tr>';
+  }).join('') || '<tr><td colspan="3" class="mut">ไม่มีรายการ</td></tr>';
+  return '<table class="rp-t"><thead><tr><th>รายการ</th><th>จำนวน (บาท)</th><th>ร้อยละ</th></tr></thead><tbody>' + body +
+    '</tbody><tfoot><tr class="tot"><td>รวม ' + sorted.length + ' รายการ</td><td class="n">' + nf2.format(total) + '</td><td class="n">100.0%</td></tr></tfoot></table>';
+}
+
+function renderReport(d, m) {
+  const s = d.summary, st = heroState(d, m), root = $('#report');
+  const parts = segParts(d, m), segTot = parts.reduce((a, p) => a + p.val, 0);
+  const over = s.usable < -0.004, den = over ? 'ภาระผูกพันทั้งหมด' : 'เงินสะสมกองทุน';
+  const stateCls = st.k;
+
+  /* ตารางวิธีคำนวณ */
+  const fRows = formulaRows(d, m).map(r =>
+    '<tr class="' + (r[4] ? 'tot' : '') + '"><td class="sg">' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td class="n">' + nf2.format(r[2]) + '</td></tr>').join('');
+
+  /* แถบสถานะ + ตารางสัดส่วน */
+  const segBar = '<div class="rp-seg">' + parts.map(p => '<i style="flex:' + p.val + ';background:' + p.color + '"></i>').join('') + '</div>';
+  const segRows = parts.map(p =>
+    '<tr><td>' + key(p.color) + esc(p.name) + '</td><td class="n">' + nf2.format(p.val) + '</td><td class="n mut">' + P(p.val, segTot) + '%</td></tr>').join('') ||
+    '<tr><td colspan="3" class="mut">ยังไม่มียอดให้แบ่งสัดส่วน</td></tr>';
+
+  /* ตารางภาระผูกพัน ปี × สถานะ (เฉพาะสถานะที่มียอด) เรียงปีเก่า -> ใหม่ */
+  const sts = m.statuses.filter(x => (m.statusTot[x] || 0) > 0.004);
+  const yrs = m.years.slice().sort((a, b) => (a === NOYEAR) - (b === NOYEAR) || Number(a) - Number(b));
+  const cell = v => v ? '<td class="n">' + nf2.format(v) + '</td>' : '<td class="n z">–</td>';
+  const cHead = '<tr><th>ปีงบประมาณของทุน</th>' + sts.map(x => '<th>' + key(statusColor(x)) + esc(x) + '</th>').join('') + '<th>ผลรวม</th></tr>';
+  const cBody = yrs.map(y => '<tr><td>' + esc(y) + '</td>' + sts.map(x => cell(m.mx[y][x])).join('') + '<td class="n"><b>' + nf2.format(m.yearTot[y]) + '</b></td></tr>').join('') ||
+    '<tr><td colspan="' + (sts.length + 2) + '" class="mut">ไม่มีภาระผูกพัน</td></tr>';
+  const cFoot = '<tr class="tot"><td>ผลรวม</td>' + sts.map(x => '<td class="n">' + nf2.format(m.statusTot[x]) + '</td>').join('') + '<td class="n">' + nf2.format(s.commit) + '</td></tr>';
+
+  /* หมายเหตุ */
+  const notes = d.warnings.filter(w => w.level === 'warn' || w.level === 'crit').slice(0, 4).map(w => '<li>' + esc(w.text) + '</li>');
+  const closed = m.statusTot['ยุติทุน'] || 0;
+  notes.push('<li>ภาระผูกพันรวมทุกสถานะตามข้อมูลต้นทาง' + (closed > 0.004 ? ' รวมรายการยุติทุน ' + nf2.format(closed) + ' บาทที่ยังบันทึกอยู่' : '') + '</li>');
+
+  const asof = d.asOfDate ? 'ตัวเลข ณ วันที่ <b>' + esc(d.asOfDate) + '</b>' : (S.via === 'snapshot' ? 'ข้อมูลสำรอง' : '');
+  const inTot = d.income.reduce((a, x) => a + x.amount, 0), exTot = d.expense.reduce((a, x) => a + x.amount, 0);
+
+  root.innerHTML =
+    '<div id="rp-in">' +
+      '<div class="rp-head"><div class="rp-logo">' + LOGO + '</div>' +
+        '<div class="rp-title"><h1>รายงานกองทุนวิจัย</h1><p>Research fund · ปีงบประมาณ ' + d.fy + '</p></div>' +
+        '<div class="rp-meta">' + (asof ? asof + '<br>' : '') + 'หน่วย: บาท</div></div>' +
+
+      '<div class="rp-kpis">' +
+        '<div class="rp-kpi main"><div class="l">เงินที่ใช้ได้จริง <span class="rp-state ' + stateCls + '">' + esc(st.ic + ' ' + st.t) + '</span></div>' +
+          '<div class="v"><small>฿</small>' + nf2.format(s.usable) + '</div><div class="s">เงินสะสมกองทุน − ภาระผูกพันทั้งหมด</div></div>' +
+        '<div class="rp-kpi"><div class="l">' + key(C.out) + 'ภาระผูกพัน</div><div class="v"><small>฿</small>' + nf2.format(s.commit) + '</div>' +
+          '<div class="s">ทุกสถานะ' + (s.fund > 0.004 ? ' · ร้อยละ ' + P(s.commit, s.fund) + ' ของเงินสะสม' : '') + '</div></div>' +
+        '<div class="rp-kpi"><div class="l">เงินสะสมกองทุน</div><div class="v"><small>฿</small>' + nf2.format(s.fund) + '</div>' +
+          '<div class="s">' + (Math.abs(s.other) > 0.004 ? 'หลังหักรายจ่ายและยอดหักอื่น' : 'หลังหักรายจ่าย') + '</div></div>' +
+      '</div>' +
+
+      '<div class="rp-sec rp-2">' +
+        '<div><div class="rp-h">วิธีคำนวณเงินที่ใช้ได้จริง</div>' +
+          '<table class="rp-t"><thead><tr><th></th><th>รายการ</th><th>จำนวน (บาท)</th></tr></thead><tbody>' + fRows + '</tbody></table></div>' +
+        '<div><div class="rp-h">สถานะงบประมาณ <span>ส่วนแบ่งของ' + den + '</span></div>' + segBar +
+          '<table class="rp-t"><thead><tr><th>สถานะ</th><th>จำนวน (บาท)</th><th>ร้อยละ</th></tr></thead><tbody>' + segRows + '</tbody></table></div>' +
+      '</div>' +
+
+      '<div class="rp-sec rp-2">' +
+        '<div><div class="rp-h">' + key(C.in) + 'รายรับจริง ปี ' + d.fy + ' <span>รวม ' + nf2.format(inTot) + '</span></div>' + reportList(d.income, C.in) + '</div>' +
+        '<div><div class="rp-h">' + key(C.out) + 'รายจ่ายจริง ปี ' + d.fy + ' <span>รวม ' + nf2.format(exTot) + '</span></div>' + reportList(d.expense, C.out) + '</div>' +
+      '</div>' +
+
+      '<div class="rp-sec"><div class="rp-h">ภาระผูกพันคงค้าง จำแนกตามปีงบประมาณของทุนและสถานะ <span>หน่วย: บาท</span></div>' +
+        '<table class="rp-t"><thead>' + cHead + '</thead><tbody>' + cBody + '</tbody><tfoot>' + cFoot + '</tfoot></table></div>' +
+
+      '<div class="rp-sec"><div class="rp-h">หมายเหตุ</div><ul class="rp-notes">' + notes.join('') + '</ul></div>' +
+
+      '<div class="rp-foot"><span>Research fund · รายงานกองทุนวิจัย ปีงบประมาณ ' + d.fy + '</span><span>หน้า 1/1</span></div>' +
+    '</div>';
+}
+
+/* ย่อให้พอดี 1 หน้า A4: พื้นที่เนื้อหา = 210−24 = 186 มม. × 296−22 = 274 มม. */
+function fitReport() {
+  const root = $('#report'), inner = $('#rp-in');
+  if (!inner) return;
+  const MM = 96 / 25.4, W = 186 * MM, H = 272 * MM;   // เผื่อไว้เล็กน้อยกันล้นหน้า
+  inner.style.zoom = ''; inner.style.width = W + 'px';
+  root.classList.add('measuring');
+  const h = inner.offsetHeight;
+  if (h > H) {
+    const z = Math.max(H / h, 0.5);
+    inner.style.zoom = String(z);
+    inner.style.width = (W / z) + 'px';
+  }
+  root.classList.remove('measuring');
+}
+
 (() => {
-  /* พิมพ์ A4 แนวตั้ง: ขอบกระดาษ 10 มม. => พื้นที่เนื้อหากว้าง 190 มม. ≈ 718 px
-     ก่อนพิมพ์วัดความกว้างเนื้อหาบนจอ แล้วล็อกความกว้างเดิมไว้ และย่อด้วย zoom ให้พอดี 190 มม. (กราฟที่วาดไว้แล้วย่อตามไปด้วย)
-     @page margin: 0 ใน CSS ทำให้เบราว์เซอร์ไม่พิมพ์วันที่/เวลา/ชื่อหน้า/URL ที่มุมกระดาษ */
-  const fit = $('#fit'), PRINT_PX = 717;
   let savedTitle = null;
 
   const beforePrint = () => {
-    if (S.printing) return;
-    savedTitle = document.title;
-    if (S.data) document.title = 'Research fund ปีงบประมาณ ' + S.data.fy;   // ชื่อไฟล์ PDF ที่เบราว์เซอร์เสนอให้
-    const w = fit.offsetWidth;
-    if (!w) return;
+    if (!S.data || !S.full) return;
     S.printing = true;
+    savedTitle = document.title;
+    document.title = 'Research fund ปีงบประมาณ ' + S.data.fy;   // ชื่อไฟล์ PDF ที่เบราว์เซอร์เสนอให้
     if (S.segOn) hideSegTip();
-    fit.style.width = w + 'px';
-    fit.style.zoom = String(PRINT_PX / w);
-    fit.classList.toggle('print-wide', w >= 1000);
+    renderReport(S.data, S.full);
+    fitReport();
   };
   const afterPrint = () => {
     if (savedTitle != null) { document.title = savedTitle; savedTitle = null; }
-    if (!S.printing) return;
     S.printing = false;
-    fit.style.width = ''; fit.style.zoom = ''; fit.classList.remove('print-wide');
-    dispatchEvent(new Event('resize'));
+    $('#report').replaceChildren();
   };
   addEventListener('beforeprint', beforePrint);
   addEventListener('afterprint', afterPrint);
 
   $('#btn-pdf').addEventListener('click', () => {
-    if (!S.data) { alert('ยังไม่มีข้อมูลให้พิมพ์'); return; }
+    if (!S.data) { alert('ยังไม่มีข้อมูลให้ส่งออก'); return; }
     window.print();
   });
 
@@ -1779,7 +1881,6 @@ let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() 
     if (!d) { alert('ยังไม่มีข้อมูลให้ส่งออก'); return; }
     const sheets = buildSheets(d), base = 'Research_fund_FY' + d.fy + '_' + stamp();
     if (typeof XLSX === 'undefined') {
-      // โหลดไลบรารี Excel ไม่ได้ -> ส่งออกเป็น CSV (เปิดใน Excel ได้ ภาษาไทยไม่เพี้ยนเพราะใส่ BOM)
       sheets.forEach(([name, rows]) => download(new Blob(['﻿' + csvOf(rows)], { type: 'text/csv;charset=utf-8' }), base + '_' + name + '.csv'));
       return;
     }
