@@ -53,22 +53,43 @@
     background: #ffffff;
   }
 
-  /* การ์ดกระจกใส (โทนสว่าง) */
+  /* การ์ด (โทนสว่าง) */
   .glass {
     background: #ffffff;
     border: 1px solid rgba(20, 18, 31, .10);
     border-radius: 28px;
     box-shadow: 0 1px 2px rgba(20, 18, 31, .04), 0 8px 28px rgba(20, 18, 31, .07);
   }
-  @page { size: A4 landscape; margin: 10mm; }
+
+  /* ===== พิมพ์ / ส่งออก PDF: A4 แนวตั้ง ย่อให้พอดีความกว้างกระดาษ ไม่มีวันที่/เวลา/ชื่อหน้าที่มุมกระดาษ =====
+     @page margin: 0 ทำให้เบราว์เซอร์ไม่พิมพ์ header/footer (วันที่ เวลา ชื่อหน้า URL)
+     ขอบกระดาษ 10 มม. ทำด้วย padding ของ #page แทน (ซ้ำทุกหน้าด้วย box-decoration-break: clone) */
+  @page { size: A4 portrait; margin: 0; }
   @media print {
-    html, body { background: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .no-print, .tabs, #seg-tip, .apexcharts-toolbar { display: none !important; }
-    .glass { box-shadow: none !important; border: 1px solid #d9d7e0 !important; break-inside: avoid; }
+    html, body { background: #fff !important; width: 210mm; margin: 0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body::before { display: none !important; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    #page {
+      width: 210mm; max-width: none !important; margin: 0 !important; box-sizing: border-box;
+      padding: 10mm !important; overflow: hidden;
+      -webkit-box-decoration-break: clone; box-decoration-break: clone;
+    }
+    /* ซ่อนส่วนที่โต้ตอบได้ ไม่มีความหมายบนกระดาษ */
+    .no-print, .tabs, .hdr-r, #seg-tip, .apexcharts-toolbar, .apexcharts-tooltip, .st-hint, .n-act, .lg-go,
+    .fgrid, #v-toggle, #f-clear, #foot { display: none !important; }
+    .glass { box-shadow: none !important; border: 1px solid #d9d7e0 !important; }
+    .glass, .notice, .scope, .fsum, .tile, .kpi, table, tr, .ranked > li { break-inside: avoid; page-break-inside: avoid; }
     .overflow-x-auto { overflow: visible !important; }
+    .tbl { min-width: 0 !important; }
     .logo { box-shadow: none !important; }
-    section, article, table, .notice { break-inside: avoid; }
+    .lg-btn { cursor: default; }
+    /* เนื้อหาถูกย่อด้วย zoom จากความกว้างบนจอ (ตั้งใน JS) เลยบังคับผังแบบจอกว้างให้เหมือนบนจอคอมพิวเตอร์ */
+    .print-wide .top { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr); }
+    .print-wide .top > .hero { grid-column: auto; }
+    .print-wide #tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .print-wide #panel-overview > section.grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
+
   .hdr-l { display: flex; align-items: center; gap: 1rem; }
   .logo { flex: none; width: 60px; height: 60px; border-radius: 18px; display: block;
     box-shadow: 0 8px 20px rgba(236, 95, 143, .35), 0 2px 6px rgba(70, 50, 120, .18); transition: transform .25s ease; }
@@ -125,14 +146,6 @@
   .tile-v { margin-top: .3rem; font-size: clamp(1.25rem, 3.6vw, 1.75rem); font-weight: 700; line-height: 1.2; font-variant-numeric: proportional-nums; }
   .key { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: .5rem; vertical-align: baseline; }
 
-  /* แท่งแบ่งสัดส่วนสูง (เงินสะสมกองทุน = ใช้ได้จริง + ภาระผูกพันแยกสถานะ) สีตัวอักษรในแท่งเลือกจากความเปรียบต่างของสีพื้น */
-  .seg { display: flex; gap: 2px; height: 28px; width: 100%; }
-  .seg > div {
-    flex: 1 1 0; min-width: 0; border-radius: 4px; display: flex; align-items: center;
-    padding-left: 8px; font-size: .75rem; font-weight: 500; white-space: nowrap; overflow: visible;
-    transition: flex-grow .7s cubic-bezier(.2, .8, .2, 1);
-  }
-  .seg > div:hover, .seg > div:focus-visible { filter: brightness(1.07) saturate(1.1); }
   .legend { display: flex; flex-wrap: wrap; gap: .35rem 1.1rem; margin-top: .85rem; font-size: .8125rem; color: var(--ink2); list-style: none; padding: 0; }
   .legend .key { margin-right: .4rem; }
 
@@ -154,7 +167,7 @@
   .tbl tfoot td { font-weight: 700; border-bottom: 0; border-top: 1px solid rgba(20, 18, 31, .35); }
   .tbl .zero { color: rgba(20, 18, 31, .42); }
 
-  /* ApexCharts ให้กลืนกับกระจกสว่าง */
+  /* ApexCharts */
   .apexcharts-tooltip { background: rgba(255, 255, 255, .97) !important; border: 1px solid rgba(20, 18, 31, .14) !important; box-shadow: 0 8px 28px rgba(50, 36, 100, .20) !important; color: var(--ink) !important; font-family: var(--font) !important; }
   .apexcharts-tooltip-title { background: rgba(20, 18, 31, .05) !important; border-bottom: 1px solid rgba(20, 18, 31, .10) !important; font-family: var(--font) !important; }
   .apexcharts-legend-text { color: var(--ink2) !important; font-family: var(--font) !important; }
@@ -168,7 +181,7 @@
     *, *::before, *::after { animation: none !important; transition: none !important; }
   }
 
-  /* ===== รอบปรับตามรีวิว: ขอบเขตข้อมูล · แท็บ · ตัวกรอง · สูตร ===== */
+  /* ===== ขอบเขตข้อมูล · แท็บ · ตัวกรอง · สูตร ===== */
   [hidden] { display: none !important; }
 
   .scope {
@@ -242,14 +255,11 @@
   }
   .n-act:hover { background: #2a2740; }
 
-  /* เส้นเชื่อมของกราฟสะพานเงิน */
-  .rf-conn { stroke: #8d8b84; stroke-width: 1; stroke-dasharray: 3 3; pointer-events: none; }
-
   /* เลขปีบนแกนใช้ความกว้างตัวเลขเท่ากัน จะได้เรียงตรงกัน */
   .apexcharts-yaxis-label, .apexcharts-xaxis-label { font-variant-numeric: tabular-nums; }
 
-  /* ===== รอบจัดหน้าบนใหม่ (กะทัดรัด): การ์ดเล็กลง · แถวบนสามใบ · แถบสถานะ · ป้ายสถานะ ===== */
-  .cmp { border-radius: 20px; }                         /* .glass ใช้มุมโค้ง 28px ใหญ่เกินสำหรับการ์ดเล็ก */
+  /* ===== จัดหน้าบนแบบกะทัดรัด ===== */
+  .cmp { border-radius: 20px; }
   .card-t { font-size: 1rem; }
   .card-s { font-size: .8125rem; }
 
@@ -262,9 +272,9 @@
   .hdr .pill { padding: .3rem .75rem; font-size: .8125rem; line-height: 1.4; }
   .hdr .btn { padding: .3rem .85rem; font-size: .8125rem; }
   .hdr > div:first-child { flex: 1 1 18rem; }
-  @media (max-width: 639px) {                        /* มือถือ: สถานะกับปุ่มรีเฟรชอยู่แถวเดียวกัน */
-    .hdr-r { width: 100%; flex-wrap: nowrap; }
-    .hdr .pill { flex: 1 1 auto; min-width: 0; border-radius: 14px; font-size: .75rem; }
+  @media (max-width: 639px) {
+    .hdr-r { width: 100%; flex-wrap: wrap; }
+    .hdr .pill { flex: 1 1 100%; min-width: 0; border-radius: 14px; font-size: .75rem; }
     .hdr .btn { flex: none; }
   }
 
@@ -286,7 +296,7 @@
   }
   .hero-asof { font-size: .75rem; line-height: 1.5; color: var(--ink2); }
 
-  /* ปุ่มพับ "ดูวิธีคำนวณ": ปิดอยู่เป็นแค่บรรทัดข้อความ เปิดแล้วค่อยเป็นการ์ด */
+  /* ปุ่มพับ "ดูวิธีคำนวณ" */
   .formula.fstrip { margin-top: .4rem; padding: .1rem .5rem; border: 1px solid transparent; border-radius: 14px; }
   .formula.fstrip > summary { font-size: .8125rem; color: var(--ink2); padding: .15rem 0; }
   .formula.fstrip[open] { padding: .5rem .9rem .7rem; background: rgba(255, 255, 255, .72); border-color: rgba(70, 50, 120, .14); }
@@ -323,7 +333,7 @@
   .st-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 .75rem; }
   .st-hint { margin-top: .4rem; font-size: .6875rem; line-height: 1.5; color: var(--ink2); }
 
-  /* แถบสถานะแนวนอน: แต่ละช่วงเป็นปุ่ม ชี้/แตะแล้วเห็นจำนวนเงินจริง */
+  /* แถบสถานะแนวนอน */
   .seg-wrap { position: relative; }
   .seg { display: flex; gap: 2px; height: 28px; width: 100%; }
   .seg > button {
@@ -342,7 +352,7 @@
   .seg-tip .tt-h .key { margin-right: .45rem; }
   .seg-tip .tt-s { font-size: .8125rem; line-height: 1.45; color: var(--ink2); }
 
-  /* รายการใต้แท่ง: จอกว้างแบ่งสองคอลัมน์ให้การ์ดเตี้ย (จำนวนแถว --rows ตั้งจาก JS) */
+  /* รายการใต้แท่ง */
   .legend2 { list-style: none; padding: 0; margin: .5rem 0 0; display: grid; gap: 0 1.5rem; }
   @media (min-width: 720px) { .legend2 { grid-auto-flow: column; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(var(--rows, 3), auto); } }
   .lg-row {
@@ -351,7 +361,7 @@
     font: inherit; font-size: .8125rem; line-height: 1.4; color: var(--ink); text-align: left;
   }
   .lg-btn { cursor: pointer; transition: background .15s; }
-  .lg-btn:hover { background: rgba(255, 255, 255, .85); }
+  .lg-btn:hover { background: rgba(20, 18, 31, .05); }
   .lg-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
   .lg-n { display: flex; align-items: baseline; min-width: 0; }
   .lg-n .key { flex: none; margin-right: .45rem; }
@@ -359,7 +369,6 @@
   .lg-p { font-variant-numeric: tabular-nums; text-align: right; color: var(--ink2); white-space: nowrap; }
   .lg-go { color: var(--ink2); font-size: 1.1rem; line-height: 1; text-align: right; }
   .lg-empty { padding: .4rem .55rem; font-size: .8125rem; color: var(--ink2); }
-  /* จอแคบ: ชื่อสถานะได้ทั้งบรรทัด จำนวนเงินกับร้อยละอยู่บรรทัดล่าง */
   @media (max-width: 480px) {
     .lg-row { grid-template-columns: minmax(0, 1fr) auto .9rem; gap: 0 .5rem; padding: .25rem .25rem; }
     .lg-n { grid-column: 1 / -1; }
@@ -368,7 +377,7 @@
     .lg-go { grid-column: 3; }
   }
 
-  /* คำเตือน: ข้อความกับป้ายผลกระทบ/ปุ่มอยู่บรรทัดเดียวกันเมื่อมีที่ */
+  /* คำเตือน */
   .notice { padding: .45rem .8rem; border-radius: 14px; font-size: .8125rem; line-height: 1.5; gap: .6rem; }
   .n-ic { width: 20px; height: 20px; font-size: .72rem; }
   .n-body { display: flex; flex-wrap: wrap; align-items: center; gap: .2rem .8rem; }
@@ -382,7 +391,8 @@
 </head>
 
 <body class="antialiased">
-<div class="mx-auto max-w-[1200px] px-4 py-4 sm:px-6 sm:py-6">
+<div id="page" class="mx-auto max-w-[1200px] px-4 py-4 sm:px-6 sm:py-6">
+<div id="fit">
 
   <!-- หัวหน้า + สถานะการเชื่อมต่อ -->
   <header class="glass cmp hdr">
@@ -391,7 +401,6 @@
       <div class="min-w-0">
         <p class="hdr-s">รายงานกองทุนวิจัย · <span id="fy-label"> —</span></p>
         <h1 class="hdr-t">Research fund</h1>
-        <p id="src-line" class="hdr-s">กำลังเชื่อมต่อแหล่งข้อมูล…</p>
       </div>
     </div>
     <div class="hdr-r">
@@ -400,15 +409,14 @@
         <span id="live-text">กำลังเชื่อมต่อ…</span>
       </div>
       <button id="btn-refresh" class="btn no-print" type="button">รีเฟรชตอนนี้</button>
-      <button id="btn-pdf" class="btn no-print" type="button" title="เปิดหน้าต่างพิมพ์ แล้วเลือก 'บันทึกเป็น PDF'">พิมพ์ PDF</button>
+      <button id="btn-pdf" class="btn no-print" type="button" title="เปิดหน้าต่างพิมพ์ แล้วเลือก 'บันทึกเป็น PDF' (A4 แนวตั้ง)">พิมพ์ PDF</button>
       <button id="btn-xlsx" class="btn no-print" type="button" title="ดาวน์โหลดตัวเลขทั้งหมดเป็นไฟล์ Excel">ส่งออก Excel</button>
     </div>
   </header>
 
   <div id="status-banner" class="mt-4 grid gap-2"></div>
 
-  <!-- ตัวเลขหลัก เรียงตามความสำคัญ: เงินใช้ได้จริง > ภาระผูกพัน > เงินสะสมกองทุน > สถานะงบ > ลิงก์ดูรายการ
-       จอกว้างวางสามใบในแถวเดียว (ซ้ายไปขวา) จอแคบ: การ์ดแรกเต็มแถว แล้วสองใบเล็กคู่กัน -->
+  <!-- ตัวเลขหลัก เรียงตามความสำคัญ: เงินใช้ได้จริง > ภาระผูกพัน > เงินสะสมกองทุน > สถานะงบ > ลิงก์ดูรายการ -->
   <div class="top mt-3">
     <section class="glass cmp hero" aria-labelledby="hero-l">
       <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
@@ -449,7 +457,7 @@
     <p class="st-hint">ชี้หรือแตะที่แท่งเพื่อดูจำนวนเงิน · กดสถานะที่มี › เพื่อดูรายการในแท็บภาระผูกพัน</p>
   </section>
 
-  <!-- คำเตือนจากข้อมูล (อยู่ใต้ตัวเลขหลัก เพื่อให้เงินที่ใช้ได้จริงขึ้นก่อน ป้ายสถานะในการ์ดบนพาไปอ่านต่อได้) -->
+  <!-- คำเตือนจากข้อมูล -->
   <div id="notices" class="mt-3 grid gap-2"></div>
 
   <!-- ขอบเขตของตัวเลขทั้งหน้า -->
@@ -462,7 +470,7 @@
   <section id="tiles" class="mt-2 grid grid-cols-2 gap-3 lg:grid-cols-4" aria-label="ที่มาของเงินสะสมกองทุน"></section>
 
   <!-- แท็บ -->
-  <div class="mt-5 max-w-full overflow-x-auto pb-1">
+  <div class="mt-5 max-w-full overflow-x-auto pb-1 no-print">
     <div class="tabs" role="tablist" aria-label="หมวดข้อมูล">
       <button id="tab-overview" class="tab" type="button" role="tab" aria-selected="true" aria-controls="panel-overview">ภาพรวมปีงบประมาณ</button>
       <button id="tab-commit" class="tab" type="button" role="tab" aria-selected="false" aria-controls="panel-commit" tabindex="-1">ภาระผูกพันหลายปี</button>
@@ -473,7 +481,7 @@
   <div id="panel-overview" role="tabpanel" aria-labelledby="tab-overview" tabindex="0" class="mt-4 grid grid-cols-1 gap-5">
     <article class="glass cmp p-4 sm:p-5">
       <h2 class="card-t">จากยอดยกมาถึงเงินที่ใช้ได้จริง</h2>
-      <p class="card-s">หน่วย: ล้านบาท · แท่งลอยคือจำนวนที่เพิ่มหรือลดในแต่ละขั้น · เส้นประเชื่อมยอดสะสมไปขั้นถัดไป</p>
+      <p class="card-s">หน่วย: ล้านบาท · แท่งแสดงจำนวนที่เพิ่มหรือลดในแต่ละขั้น</p>
       <div id="ch-bridge" class="mt-3"></div>
       <ul class="legend" aria-label="คำอธิบายสีของกราฟ">
         <li><span class="key" style="background:var(--in)"></span>เพิ่ม</li>
@@ -564,9 +572,8 @@
     </section>
   </div>
 
-  <footer id="foot" class="mt-8 pb-4 text-center text-sm text-[var(--ink2)]">
-    ข้อมูลอ่านจาก Google Sheet ที่เปิดสาธารณะ
-  </footer>
+  <footer id="foot" class="mt-8 pb-4 text-center text-sm text-[var(--ink2)]"></footer>
+</div>
 </div>
 
 <script>
@@ -606,7 +613,7 @@ const C = {
   grid: '#e1e0d9', base: '#c3c2b7', axis: '#6a6964', ink: '#14121f', gap: '#fbf9fd'
 };
 const statusColor = s => C.status[s] || C.extra;
-/* สีตัวอักษรบนพื้นสี: เลือกขาว/ดำตามความเปรียบต่างที่มากกว่า (สีสว่างอย่างเหลือง/ชมพู/เขียวน้ำทะเลใช้ตัวดำ) */
+/* สีตัวอักษรบนพื้นสี: เลือกขาว/ดำตามความเปรียบต่างที่มากกว่า */
 const lum = h => { const c = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255).map(v => (v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4))); return .2126 * c[0] + .7152 * c[1] + .0722 * c[2]; };
 const inkOn = h => { const L = lum(h) + .05; return 1.05 / L >= L / (lum('#0b0b0b') + .05) ? '#ffffff' : '#0b0b0b'; };
 
@@ -771,7 +778,7 @@ function fromTidy(g) {
   const hdr = (grid, test) => { for (let i = 0; i < Math.min(grid.length, 4); i++) if (test(grid[i])) return i; return -1; };
   const hs = hdr(g.summary, r => txt(r[0]) === 'key'), hi = hdr(g.income, r => txt(r[0]) === 'รายการ'),
         he = hdr(g.expense, r => txt(r[0]) === 'รายการ'), hc = hdr(g.commit, r => txt(r[1]) === 'สถานะ');
-  if (hs < 0 || hi < 0 || he < 0 || hc < 0) return null;   // ไม่ใช่แท็บสะอาด (เช่น ชื่อแท็บไม่มี แล้ว Google ส่งแท็บแรกมาแทน)
+  if (hs < 0 || hi < 0 || he < 0 || hc < 0) return null;   // ไม่ใช่แท็บสะอาด
   const warnings = [], T = CFG.TABS, S = {};
   let asOfDate = null;
   g.summary.forEach((r, i) => { if (i <= hs) return; const k = txt(r[0]); if (!k) return; if (k === 'asof') { asOfDate = txt(r[2]) || null; return; } S[k] = num(r[2]); });
@@ -807,7 +814,7 @@ function fromTidy(g) {
   };
 }
 
-/* เติมสถานะที่พบจริง และคำเตือนที่คำนวณจากข้อมูล (คำนวณเหมือน Code.gs) */
+/* เติมสถานะที่พบจริง และคำเตือนที่คำนวณจากข้อมูล */
 function finish(d) {
   const statuses = ['ยุติทุน', 'รอเอกสารจากงานวิจัย', 'รอเอกสารประกอบการเบิกจ่าย', UNKNOWN];
   d.commit.forEach(r => { if (!statuses.includes(r.status)) statuses.push(r.status); });
@@ -824,7 +831,7 @@ function finish(d) {
 async function readSheet() {
   const T = CFG.TABS;
   let sum = null;
-  try { sum = await gviz(T.summary, 1); } catch (_) { /* ไม่มีแท็บ/อ่านไม่ได้ -> ลองตารางเดิม (ถ้าสาเหตุคือชีตไม่สาธารณะ ตารางเดิมจะแจ้งข้อความจริง) */ }
+  try { sum = await gviz(T.summary, 1); } catch (_) { /* ไม่มีแท็บ/อ่านไม่ได้ -> ลองตารางเดิม */ }
   if (sum && sum.some(r => txt(r[0]) === 'key')) {
     const [income, expense, commit] = await Promise.all([gviz(T.income, 1), gviz(T.expense, 1), gviz(T.commit, 1)]);
     const d = fromTidy({ summary: sum, income, expense, commit });
@@ -886,7 +893,7 @@ function apply(d) {
 const NOYEAR = 'ไม่ระบุปี';
 const yearKey = r => (r.fy == null ? NOYEAR : String(r.fy));
 
-/* แบบจำลองเต็ม (ไม่ผ่านตัวกรอง) ใช้กับการ์ดสรุป แท่งสัดส่วน และตัวเลือกตัวกรอง */
+/* แบบจำลองเต็ม (ไม่ผ่านตัวกรอง) ใช้กับการ์ดสรุป แท่งสัดส่วน ตัวเลือกตัวกรอง และส่งออก Excel */
 function buildModel(d) {
   const statuses = (d.statuses && d.statuses.length ? d.statuses : Object.keys(C.status)).slice();
   d.commit.forEach(r => { if (!statuses.includes(r.status)) statuses.push(r.status); });
@@ -912,7 +919,7 @@ const prevYears = (full, fy) => full.yearsNum.filter(y => y < fy).map(String);
 const sameSet = (set, arr) => !!set && set.size === arr.length && arr.every(x => set.has(x));
 
 /* แบบจำลองหลังกรอง ใช้กับกราฟ ตาราง และยอดตามตัวกรอง
-   kind: val = มียอด · none = ปีนี้มีในชุดข้อมูลแต่ไม่ตรงตัวกรอง · gap = ปีนี้ไม่มีแถวเลยในชุดข้อมูล (ไม่ใช่ยอดศูนย์ที่ยืนยันแล้ว) */
+   kind: val = มียอด · none = ปีนี้มีในชุดข้อมูลแต่ไม่ตรงตัวกรอง · gap = ปีนี้ไม่มีแถวเลยในชุดข้อมูล */
 function buildView(d, full) {
   const rows = filterRows(d);
   const statuses = F.statuses ? full.statuses.filter(s => F.statuses.has(s)) : full.statuses.slice();
@@ -922,7 +929,7 @@ function buildView(d, full) {
   else {
     keys = [];
     const lo = full.yearsNum[0], hi = full.yearsNum[full.yearsNum.length - 1];
-    if (full.yearsNum.length && hi - lo <= 40) for (let y = lo; y <= hi; y++) keys.push(String(y));   // ช่วงต่อเนื่อง: ปีที่ขาดกลางทางจะเห็นเป็นแถว "ไม่มีรายการ"
+    if (full.yearsNum.length && hi - lo <= 40) for (let y = lo; y <= hi; y++) keys.push(String(y));
     else keys = full.yearsNum.map(String);
     if (have.has(NOYEAR)) keys.push(NOYEAR);
   }
@@ -963,13 +970,11 @@ function tween(node, to, fmt) {
 }
 
 function render(d) {
-  const full = S.full = buildModel(d), s = d.summary;
+  const full = S.full = buildModel(d);
   S.dirty = S.dirty || {};
   document.title = 'Research fund — รายงานกองทุนวิจัยปี ' + d.fy;
   $('#fy-label').textContent = 'ปีงบประมาณ ' + d.fy;
 
-  /* ตัวเลขเด่นเรียงตามความสำคัญ (ไม่เปลี่ยนตามตัวกรองของแท็บภาระผูกพัน):
-     เงินใช้ได้จริง > ภาระผูกพัน > เงินสะสมกองทุน > แถบสัดส่วนสถานะ > ลิงก์ดูรายการ > ที่มาของเงินสะสม */
   renderHero(d, full);
   renderKpis(d, full);
   renderScope(d, full);
@@ -992,7 +997,7 @@ function render(d) {
   renderNotices(d);
   renderAsof();
   paintVisible();
-  $('#foot').textContent = 'ดึงข้อมูลใหม่ทุก ' + CFG.REFRESH_MS / 1000 + ' วินาที · ตัวเลขทุกจุดคำนวณจากแท็บในชีตโดยตรง';
+  $('#foot').textContent = 'ดึงข้อมูลใหม่ทุก ' + CFG.REFRESH_MS / 1000 + ' วินาที';
 }
 
 /* กราฟสร้างและอัปเดตเฉพาะตอนที่แท็บของมันมองเห็นอยู่ (กล่องที่ซ่อนกว้าง 0 จะวาดผิด) */
@@ -1000,7 +1005,6 @@ function paintVisible() {
   if (!S.data) return;
   if (S.tab === 'commit') { if (S.dirty.commit) paintCommitCharts(); }
   else if (S.dirty.bridge) renderBridge(S.data.summary);
-  else drawConn();
 }
 function showTab(name) {
   const t = name === 'commit' ? 'commit' : 'overview';
@@ -1024,7 +1028,7 @@ function renderScope(d, full) {
     ? 'ทุกปีของทุนที่ยังค้าง (' + (yrs.length > 1 ? yrs[0] + '–' + yrs[yrs.length - 1] : yrs[0]) + ')' + (full.years.includes(NOYEAR) ? ' + ไม่ระบุปี' : '')
     : 'ไม่มีรายการ';
 }
-/* วันที่ตัดยอดมาจากชีตเท่านั้น (key asof) ส่วนเวลาสร้างไฟล์ / เวลาอ่านชีต ไม่ใช่วันที่ตรวจยอด จึงบอกแยกกันและไม่เรียกว่า "ข้อมูลสด" */
+/* วันที่ตัดยอดมาจากชีตเท่านั้น (key asof) */
 function asofText() {
   const d = S.data;
   if (!d) return '—';
@@ -1032,7 +1036,6 @@ function asofText() {
   if (S.via === 'snapshot') return 'ไฟล์สำรอง' + (d.generatedAt ? ' สร้างเมื่อ ' + dateTimeStr(d.generatedAt) : '') + ' · ไม่ทราบวันที่ตัดยอด';
   return 'ยังไม่ระบุวันที่ตัดยอดในชีต · อ่านชีตล่าสุดเวลา ' + timeStr(S.lastOk || Date.now());
 }
-/* บรรทัดรองใต้ตัวเลขเด่น: สั้น ๆ ว่าอัปเดตเมื่อไรและตัดยอดวันไหน */
 function heroAsofText() {
   const d = S.data;
   if (!d) return '—';
@@ -1077,7 +1080,7 @@ function goFormula() {
   jump(f);
   f.querySelector('summary').focus({ preventScroll: true });
 }
-/* --- แท่งแบ่งสัดส่วนสูง: เงินสะสมกองทุน = ใช้ได้จริง + ภาระผูกพันแยกสถานะ (ชี้/แตะแล้วเห็นจำนวนเงินจริง) --- */
+/* --- แท่งแบ่งสัดส่วน: เงินสะสมกองทุน = ใช้ได้จริง + ภาระผูกพันแยกสถานะ --- */
 const SEG_ORDER = ['รอเอกสารจากงานวิจัย', 'ไม่ระบุสถานะ', 'รอเอกสารประกอบการเบิกจ่าย', 'ยุติทุน'];
 function segParts(d, m) {
   const s = d.summary;
@@ -1090,7 +1093,7 @@ function segParts(d, m) {
 
 function renderSeg(d, m) {
   const s = d.summary, live = segParts(d, m), total = live.reduce((a, p) => a + p.val, 0);
-  /* ปกติส่วนแบ่งคิดจากเงินสะสมกองทุน แต่ถ้าภาระผูกพันสูงกว่าเงินสะสม ฐานคือภาระผูกพันทั้งหมด (ไม่ใช้ฐานที่ติดลบ) */
+  /* ปกติส่วนแบ่งคิดจากเงินสะสมกองทุน แต่ถ้าภาระผูกพันสูงกว่าเงินสะสม ฐานคือภาระผูกพันทั้งหมด */
   const over = s.usable < -0.004, den = over ? 'ภาระผูกพันทั้งหมด' : 'เงินสะสมกองทุน';
   $('#seg-title').textContent = over
     ? 'ภาระผูกพันทั้งหมด ' + nf2.format(s.commit) + ' บาท (สูงกว่าเงินสะสมกองทุน) แบ่งตามสถานะ'
@@ -1107,15 +1110,15 @@ function renderSeg(d, m) {
     const label = p.name + ': ฿' + nf2.format(p.val) + ' (ร้อยละ ' + share + ' ของ' + den + ')';
     b.setAttribute('aria-label', label);
     const sp = b.firstChild; sp.textContent = share + '%';
-    sp.style.display = (W * p.val / total) >= 52 ? '' : 'none';   // ป้ายที่ไม่พอดีไม่ถูกพิมพ์ ค่าจริงอยู่ใน tooltip และรายการด้านล่าง
+    sp.style.display = (W * p.val / total) >= 52 ? '' : 'none';
     desc.push(label);
   });
   seg.hidden = !live.length;
   seg.setAttribute('aria-label', 'สัดส่วนเงินสะสมกองทุน: ' + desc.join(', '));
 
-  /* รายการใต้แท่ง: ชื่อ · จำนวนเงิน · ร้อยละ · ปุ่มดูรายการ (สร้างใหม่เฉพาะตอนชุดสถานะเปลี่ยน เพื่อไม่ให้โฟกัสหลุด) */
+  /* รายการใต้แท่ง (สร้างใหม่เฉพาะตอนชุดสถานะเปลี่ยน เพื่อไม่ให้โฟกัสหลุด) */
   const lg = $('#seg-legend'), sig = live.map(p => p.name + (p.link ? '>' : '')).join('|');
-  lg.style.setProperty('--rows', Math.max(Math.ceil(live.length / 2), 1));   // จอกว้างแบ่งสองคอลัมน์ เรียงลงก่อนแล้วค่อยขึ้นคอลัมน์ใหม่
+  lg.style.setProperty('--rows', Math.max(Math.ceil(live.length / 2), 1));
   if (lg._sig !== sig) {
     lg._sig = sig; lg.replaceChildren();
     live.forEach(p => {
@@ -1136,7 +1139,6 @@ function renderSeg(d, m) {
   });
   if (!live.length) { lg._sig = null; lg.replaceChildren(el('li', 'lg-empty', 'ยังไม่มียอดให้แบ่งสัดส่วน')); }
 
-  /* ถ้า tooltip เปิดอยู่ระหว่างที่ข้อมูลหรือขนาดจอเปลี่ยน ให้ตามไปอัปเดต ไม่ปิดทิ้ง */
   if (S.segOn) { if (seg.contains(S.segOn)) showSegTip(S.segOn); else hideSegTip(); }
 }
 
@@ -1169,7 +1171,7 @@ function goStatus(st) {
 }
 const goUnknown = () => goStatus(UNKNOWN);
 
-/* --- ป้ายสถานะใต้ "เงินที่ใช้ได้จริง": อ่านแล้วรู้ทันทีว่าจัดสรรได้หรือต้องตรวจก่อน --- */
+/* --- ป้ายสถานะใต้ "เงินที่ใช้ได้จริง" --- */
 function heroState(d, full) {
   const s = d.summary, unk = full.statusTot[UNKNOWN] || 0, closed = full.statusTot['ยุติทุน'] || 0;
   if (s.usable < -0.004) return { k: 'bad', ic: '!', t: 'ภาระผูกพันเกินเงินสะสม', why: 'ภาระผูกพันทั้งหมดสูงกว่าเงินสะสมกองทุนอยู่ ' + nf2.format(r2(-s.usable)) + ' บาท' };
@@ -1196,7 +1198,7 @@ function renderHero(d, full) {
   b.setAttribute('aria-label', st.t + ': ' + st.why);
 }
 
-/* --- การ์ด KPI สองใบ: ภาระผูกพัน (ลำดับที่ 2) และเงินสะสมกองทุน (ลำดับที่ 3) --- */
+/* --- การ์ด KPI สองใบ: ภาระผูกพัน และเงินสะสมกองทุน --- */
 function renderKpis(d, m) {
   const s = d.summary;
   tween($('#kpi-commit-v'), s.commit, nf2.format);
@@ -1249,13 +1251,13 @@ function bridgeSteps(s) {
   add('ใช้ได้จริง', s.usable, C.usable, true);
   return out;
 }
-const signedM = x => (x.total ? '' : (x.v >= 0 ? '+' : '−')) + M(Math.abs(x.v));
 
 function renderBridge(s) {
   const steps = bridgeSteps(s);
   const cats = steps.map(x => NARROW() ? (SHORT[x.n] || x.n) : x.n);
   const data = steps.map(x => ({ x: NARROW() ? (SHORT[x.n] || x.n) : x.n, y: Math.abs(x.v), fillColor: x.c }));
   const box = $('#ch-bridge');
+  S.narrow = NARROW();
   if (typeof ApexCharts === 'undefined') {
     box.replaceChildren(el('p', 'nochart', 'โหลดไลบรารีกราฟไม่ได้ — ตัวเลขและตารางยังใช้ได้'));
     S.dirty.bridge = false;
@@ -1316,8 +1318,7 @@ const chip = (label, pressed, data, cls) => {
 };
 const SORT_LABEL = { yearDesc: 'ปีล่าสุดก่อน', yearAsc: 'ปีเก่าก่อน', amountDesc: 'ยอดมากไปน้อย' };
 
-/* ตัวเลือกปี/สถานะสร้างจากข้อมูลจริง (commit[].fy และ statuses) ไม่ฝังปีไว้ในโค้ด
-   สร้างใหม่เฉพาะตอนรายการตัวเลือกเปลี่ยน รอบอื่นแค่ปรับ aria-pressed เพื่อไม่ให้โฟกัสคีย์บอร์ดหลุด */
+/* ตัวเลือกปี/สถานะสร้างจากข้อมูลจริง สร้างใหม่เฉพาะตอนรายการตัวเลือกเปลี่ยน */
 function buildFilters(d, full) {
   const sig = JSON.stringify([full.years, full.statuses, d.fy]);
   if (sig !== S.fsig) {
@@ -1449,8 +1450,7 @@ const rowH = m => Math.max(240, 44 * m.years.length + 84);
 const endLabel = v => (NARROW() ? nf2.format(v / 1e6) : nf2.format(v));
 const emptyText = k => (k === 'gap' ? 'ไม่มีรายการในชุดข้อมูล' : 'ไม่มีรายการตามตัวกรอง');
 const totalFmt = (v, o) => { const k = S.m && S.m.kind[S.m.years[o.dataPointIndex]]; return k && k !== 'val' ? emptyText(k) : endLabel(v); };
-const gridPad = () => ({ left: 4, right: NARROW() ? 58 : 112 });   // ที่ว่างด้านขวาไว้ให้ตัวเลขท้ายแท่งที่ยาวที่สุด
-/* แกนตัวเลข (ล้านบาท): ทศนิยมตามช่วงขีด ไม่ให้ขึ้นเลขซ้ำเมื่อยอดสูงสุดเล็ก */
+const gridPad = () => ({ left: 4, right: NARROW() ? 58 : 112 });
 const axisM = v => { const m = v / 1e6; return (Math.abs(m * 10 - Math.round(m * 10)) < 1e-9 ? (Math.abs(m - Math.round(m)) < 1e-9 ? nf0 : nf1) : nf2).format(m); };
 const valAxis = () => ({ tickAmount: NARROW() ? 4 : 6, title: { text: 'ล้านบาท', offsetY: -2, style: { color: C.axis, fontSize: '12px', fontWeight: 400 } }, labels: { formatter: axisM, style: { colors: C.axis, fontSize: '12px' } } });
 const yLabels = () => ({ style: { colors: C.ink, fontSize: '13px' } });
@@ -1466,7 +1466,7 @@ function tipTotal({ dataPointIndex }) {
 
 function paintTotal(m) {
   const cats = m.years, h = rowH(m);
-  const color = F.statuses && m.statuses.length === 1 ? statusColor(m.statuses[0]) : C.out;   // สีตามความหมาย: รวมทุกสถานะ = สีของภาระผูกพัน, เลือกสถานะเดียว = สีของสถานะนั้น
+  const color = F.statuses && m.statuses.length === 1 ? statusColor(m.statuses[0]) : C.out;
   const series = [{ name: 'ยอดรวมภาระผูกพัน', data: cats.map(y => r2(m.yearTot[y])) }];
   const sig = [cats.join(), color, h, NARROW()].join('|');
   if (!S.charts.total) {
@@ -1569,7 +1569,7 @@ function renderTable(m) {
   fr.appendChild(cell(m.total, true)); tf.appendChild(fr); t.appendChild(tf);
 }
 
-/* --- รายการรายแถว (ตารางแบบยาว) ตามตัวกรอง: เห็นหมายเหตุและแถวที่ไม่ระบุสถานะ --- */
+/* --- รายการรายแถว (ตารางแบบยาว) ตามตัวกรอง --- */
 function kindOf(r, fy) { return r.fy == null ? 'ไม่ระบุปี' : r.fy < fy ? 'ค้างจากปีก่อน' : r.fy === fy ? 'เกิดในปีที่รายงาน' : 'ปีหลังปีที่รายงาน'; }
 function renderDetail(m, d) {
   const t = $('#detail'); t.replaceChildren();
@@ -1604,7 +1604,6 @@ function renderDetail(m, d) {
 const LEVEL = { info: ['i', 'หมายเหตุ'], warn: ['!', 'ควรตรวจสอบ'], crit: ['!', 'ผิดปกติ'] };
 const IMPACT = { other: 'รวมในยอดแล้ว · รอตรวจสอบที่มา', unknown: 'รวมในยอดแล้ว · รอระบุสถานะ', neg: 'เงินที่ใช้ได้จริงติดลบ' };
 const ACTION = { other: ['ดูวิธีคำนวณ', () => goFormula()], unknown: ['ดูรายการที่ไม่ระบุสถานะ', () => goUnknown()], neg: ['ดูวิธีคำนวณ', () => goFormula()] };
-/* รหัสคำเตือน: ใช้ w.code ถ้ามี ไม่งั้นเดาจากข้อความ (ข้อมูลจาก API / ไฟล์สำรองรุ่นเก่าไม่มีรหัส) */
 const codeOf = w => w.code || (/^ยอดหักอื่น/.test(w.text) ? 'other' : /ยังไม่ระบุสถานะ/.test(w.text) ? 'unknown' : /ติดลบ/.test(w.text) ? 'neg' : '');
 function noticeEl(level, text, code) {
   const [ic, tag] = LEVEL[level] || LEVEL.info;
@@ -1624,18 +1623,9 @@ function renderNotices(d) {
 }
 
 /* --- แถบสถานะการเชื่อมต่อ --- */
-function srcText() {
-  const T = CFG.TABS;
-  if (S.via === 'api') return 'แหล่งข้อมูล: Apps Script Web App';
-  if (S.via === 'snapshot') return 'แหล่งข้อมูล: ไฟล์สำรอง ' + CFG.FALLBACK_URL + ' (ไม่ใช่ข้อมูลสด)';
-  if (S.via === 'sheet') return 'แหล่งข้อมูล: Google Sheet เปิดสาธารณะ ไม่ต้องล็อกอิน · ' +
-    (S.data && S.data.source === 'clean' ? 'แท็บ ' + [T.summary, T.income, T.expense, T.commit].join(' · ') : 'แท็บ ' + T.raw + ' (ตารางเดิม)');
-  return 'กำลังเชื่อมต่อแหล่งข้อมูล…';
-}
 function renderStatus() {
   const dot = $('#live-dot'), txt = $('#live-text'), ban = $('#status-banner');
   ban.replaceChildren();
-  $('#src-line').textContent = srcText();
   renderAsof();
   const left = Math.max(0, Math.ceil((S.nextAt - Date.now()) / 1000));
   const next = S.busy ? 'กำลังดึงข้อมูล…' : 'รีเฟรชใน ' + left + ' วินาที';
@@ -1662,6 +1652,7 @@ setInterval(() => {
   if (Date.now() >= S.nextAt && !S.busy) load(); else renderStatus();
 }, 1000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden && Date.now() >= S.nextAt) load(); });
+
 /* ===== ตัวควบคุมหน้าจอ: แท็บ ตัวกรอง มุมมองกราฟ ===== */
 S.tab = 'overview'; S.dirty = { bridge: true, commit: true };
 $('#tab-overview').addEventListener('click', () => showTab('overview'));
@@ -1697,19 +1688,40 @@ document.addEventListener('click', () => { if (S.segPin) hideSegTip(); });
 addEventListener('keydown', e => { if (e.key === 'Escape' && S.segOn) hideSegTip(); });
 
 let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => {
-  if (!S.data) return;
+  if (!S.data || S.printing) return;   // ระหว่างพิมพ์ไม่วาดกราฟใหม่ (ความกว้างถูกล็อกไว้แล้ว)
   renderSeg(S.data, S.full);
   if (!$('#panel-overview').hidden && S.narrow !== NARROW()) renderBridge(S.data.summary);
   else if (S.narrowC !== NARROW()) { renderCommitNotes(S.data, S.full, S.m); S.dirty.commit = true; paintCommitCharts(); }
 }, 150); });
 
 
-
-/* ================= พิมพ์ PDF / ส่งออก Excel ================= */
+/* ================= พิมพ์ PDF (A4 แนวตั้ง) / ส่งออก Excel ================= */
 (() => {
+  /* พิมพ์ A4 แนวตั้ง: ขอบกระดาษ 10 มม. => พื้นที่เนื้อหากว้าง 190 มม. ≈ 718 px
+     ก่อนพิมพ์วัดความกว้างเนื้อหาบนจอ แล้วล็อกความกว้างเดิมไว้ และย่อด้วย zoom ให้พอดี 190 มม. (กราฟที่วาดไว้แล้วย่อตามไปด้วย)
+     @page margin: 0 ใน CSS ทำให้เบราว์เซอร์ไม่พิมพ์วันที่/เวลา/ชื่อหน้า/URL ที่มุมกระดาษ */
+  const fit = $('#fit'), PRINT_PX = 717;
   let savedTitle = null;
-  const beforePrint = () => { savedTitle = document.title; if (S.data) document.title = 'Research fund ปีงบประมาณ ' + S.data.fy; };
-  const afterPrint = () => { if (savedTitle != null) { document.title = savedTitle; savedTitle = null; } };
+
+  const beforePrint = () => {
+    if (S.printing) return;
+    savedTitle = document.title;
+    if (S.data) document.title = 'Research fund ปีงบประมาณ ' + S.data.fy;   // ชื่อไฟล์ PDF ที่เบราว์เซอร์เสนอให้
+    const w = fit.offsetWidth;
+    if (!w) return;
+    S.printing = true;
+    if (S.segOn) hideSegTip();
+    fit.style.width = w + 'px';
+    fit.style.zoom = String(PRINT_PX / w);
+    fit.classList.toggle('print-wide', w >= 1000);
+  };
+  const afterPrint = () => {
+    if (savedTitle != null) { document.title = savedTitle; savedTitle = null; }
+    if (!S.printing) return;
+    S.printing = false;
+    fit.style.width = ''; fit.style.zoom = ''; fit.classList.remove('print-wide');
+    dispatchEvent(new Event('resize'));
+  };
   addEventListener('beforeprint', beforePrint);
   addEventListener('afterprint', afterPrint);
 
@@ -1729,7 +1741,7 @@ let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() 
   }
 
   function buildSheets(d) {
-    const s = d.summary, m = S.model;
+    const s = d.summary, m = S.full;
     const note = [];
     if (d.asOfDate) note.push('ตัวเลข ณ วันที่ ' + d.asOfDate);
     const summary = [
