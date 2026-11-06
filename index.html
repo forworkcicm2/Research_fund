@@ -742,8 +742,7 @@ function fromRaw(p) {
   const warnings = p.warnings.slice();
   let carry = p.stated.carry;
   if (carry === undefined) { carry = 0; warnings.push({ level: 'warn', text: 'ไม่พบ "ยอดยกมา" ในตารางเดิม ใช้ 0' }); }
-  let fund = p.stated.fund, other;
-  if (fund === undefined) { other = 0; fund = r2(carry + income - spent); } else other = r2(carry + income - spent - fund);
+  const fund = r2(carry + income - spent), other = 0;   // ไม่มียอดหักอื่น: เงินสะสม = ยกมา + รายรับ − รายจ่าย
   return {
     source: 'raw', fy: p.fy,
     summary: { carry: r2(carry), income, available: r2(carry + income), spent, other, fund: r2(fund), commit, usable: r2(fund - commit) },
@@ -760,7 +759,7 @@ function fromTidy(g) {
   const warnings = [], T = CFG.TABS, S = {};
   let asOfDate = null;
   g.summary.forEach((r, i) => { if (i <= hs) return; const k = txt(r[0]); if (!k) return; if (k === 'asof') { asOfDate = txt(r[2]) || null; return; } S[k] = num(r[2]); });
-  ['fy', 'carry', 'income', 'available', 'spent', 'other', 'fund', 'commit', 'usable'].forEach(k => {
+  ['fy', 'carry', 'income', 'available', 'spent', 'fund', 'commit', 'usable'].forEach(k => {
     if (S[k] === null || S[k] === undefined) throw new Error('แท็บ "' + T.summary + '" ไม่มีตัวเลขของ key = ' + k + ' (คอลัมน์ C)');
   });
   const list = (grid, h, label) => {
@@ -787,7 +786,7 @@ function fromTidy(g) {
   });
   return {
     source: 'clean', asOfDate, fy: Math.round(S.fy),
-    summary: { carry: r2(S.carry), income: r2(S.income), available: r2(S.available), spent: r2(S.spent), other: r2(S.other), fund: r2(S.fund), commit: r2(S.commit), usable: r2(S.usable) },
+    summary: { carry: r2(S.carry), income: r2(S.income), available: r2(S.available), spent: r2(S.spent), other: 0, fund: r2(S.fund), commit: r2(S.commit), usable: r2(S.usable) },
     income: list(g.income, hi, T.income), expense: list(g.expense, he, T.expense), commit, warnings
   };
 }
@@ -827,6 +826,7 @@ function validate(d) {
   if (d.ok === false) throw new Error(d.error || 'API แจ้งว่าอ่านชีตไม่สำเร็จ');
   const s = d.summary;
   if (!s) throw new Error('ข้อมูลไม่มี summary');
+  if (s.other === undefined || s.other === null) s.other = 0;   // ไม่มียอดหักอื่นแล้ว
   for (const k of ['carry', 'income', 'available', 'spent', 'other', 'fund', 'commit', 'usable'])
     if (!Number.isFinite(s[k])) throw new Error('summary.' + k + ' ไม่ใช่ตัวเลข');
   if (!Number.isFinite(d.fy)) throw new Error('ไม่มีปีงบประมาณ');
