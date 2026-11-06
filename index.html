@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light">
-<meta name="theme-color" content="#f6f3fb">
+<meta name="theme-color" content="#ffffff">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='f' x1='6' y1='4' x2='58' y2='60' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23ffb066'/%3E%3Cstop offset='.55' stop-color='%23ec5f8f'/%3E%3Cstop offset='1' stop-color='%236552e0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='18' fill='url(%23f)'/%3E%3Crect x='1' y='1' width='62' height='62' rx='17' fill='none' stroke='%23fff' stroke-opacity='.35' stroke-width='2'/%3E%3Crect x='14' y='36' width='8' height='12' rx='3' fill='%23fff' fill-opacity='.70'/%3E%3Crect x='26' y='28' width='8' height='20' rx='3' fill='%23fff' fill-opacity='.85'/%3E%3Crect x='38' y='18' width='8' height='30' rx='3' fill='%23fff'/%3E%3Crect x='12' y='51' width='36' height='3' rx='1.5' fill='%23fff' fill-opacity='.55'/%3E%3Cpath d='M50 10l1.9 4.6 4.6 1.9-4.6 1.9L50 23l-1.9-4.6-4.6-1.9 4.6-1.9z' fill='%23fff'/%3E%3C/svg%3E">
 <title>Research fund — รายงานกองทุนวิจัย</title>
 
@@ -17,6 +17,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <style>
   :root {
@@ -44,26 +45,29 @@
     margin: 0;
     font-family: var(--font);
     color: var(--ink);
-    background: #f6f3fb;
+    background: #ffffff;
     min-height: 100vh;
   }
   body::before {
     content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
-    background:
-      radial-gradient(1100px 720px at 88% -8%, rgba(255, 168, 112, .50), transparent 62%),
-      radial-gradient(900px 700px at -8% 18%, rgba(244, 150, 214, .38), transparent 60%),
-      radial-gradient(1000px 800px at 62% 112%, rgba(120, 156, 255, .42), transparent 60%),
-      #f6f3fb;
+    background: #ffffff;
   }
 
   /* การ์ดกระจกใส (โทนสว่าง) */
   .glass {
-    background: linear-gradient(180deg, rgba(255, 255, 255, .80), rgba(255, 255, 255, .54));
-    -webkit-backdrop-filter: blur(20px) saturate(160%);
-    backdrop-filter: blur(20px) saturate(160%);
-    border: 1px solid rgba(255, 255, 255, .90);
+    background: #ffffff;
+    border: 1px solid rgba(20, 18, 31, .10);
     border-radius: 28px;
-    box-shadow: 0 0 0 1px rgba(70, 50, 120, .07), 0 12px 36px rgba(70, 50, 120, .13), inset 0 1px 0 rgba(255, 255, 255, .95);
+    box-shadow: 0 1px 2px rgba(20, 18, 31, .04), 0 8px 28px rgba(20, 18, 31, .07);
+  }
+  @page { size: A4 landscape; margin: 10mm; }
+  @media print {
+    html, body { background: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .no-print, .tabs, #seg-tip, .apexcharts-toolbar { display: none !important; }
+    .glass { box-shadow: none !important; border: 1px solid #d9d7e0 !important; break-inside: avoid; }
+    .overflow-x-auto { overflow: visible !important; }
+    .logo { box-shadow: none !important; }
+    section, article, table, .notice { break-inside: avoid; }
   }
   .hdr-l { display: flex; align-items: center; gap: 1rem; }
   .logo { flex: none; width: 60px; height: 60px; border-radius: 18px; display: block;
@@ -395,7 +399,9 @@
         <span id="live-dot" class="dot"></span>
         <span id="live-text">กำลังเชื่อมต่อ…</span>
       </div>
-      <button id="btn-refresh" class="btn" type="button">รีเฟรชตอนนี้</button>
+      <button id="btn-refresh" class="btn no-print" type="button">รีเฟรชตอนนี้</button>
+      <button id="btn-pdf" class="btn no-print" type="button" title="เปิดหน้าต่างพิมพ์ แล้วเลือก 'บันทึกเป็น PDF'">พิมพ์ PDF</button>
+      <button id="btn-xlsx" class="btn no-print" type="button" title="ดาวน์โหลดตัวเลขทั้งหมดเป็นไฟล์ Excel">ส่งออก Excel</button>
     </div>
   </header>
 
@@ -1697,6 +1703,85 @@ let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() 
   else if (S.narrowC !== NARROW()) { renderCommitNotes(S.data, S.full, S.m); S.dirty.commit = true; paintCommitCharts(); }
 }, 150); });
 
+
+
+/* ================= พิมพ์ PDF / ส่งออก Excel ================= */
+(() => {
+  let savedTitle = null;
+  const beforePrint = () => { savedTitle = document.title; if (S.data) document.title = 'Research fund ปีงบประมาณ ' + S.data.fy; };
+  const afterPrint = () => { if (savedTitle != null) { document.title = savedTitle; savedTitle = null; } };
+  addEventListener('beforeprint', beforePrint);
+  addEventListener('afterprint', afterPrint);
+
+  $('#btn-pdf').addEventListener('click', () => {
+    if (!S.data) { alert('ยังไม่มีข้อมูลให้พิมพ์'); return; }
+    window.print();
+  });
+
+  const pad = n => String(n).padStart(2, '0');
+  const stamp = () => { const t = new Date(); return t.getFullYear() + '-' + pad(t.getMonth() + 1) + '-' + pad(t.getDate()); };
+
+  function download(blob, name) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  }
+
+  function buildSheets(d) {
+    const s = d.summary, m = S.model;
+    const note = [];
+    if (d.asOfDate) note.push('ตัวเลข ณ วันที่ ' + d.asOfDate);
+    const summary = [
+      ['Research fund — รายงานกองทุนวิจัย ปีงบประมาณ ' + d.fy],
+      [note.concat(['ส่งออกเมื่อ ' + new Date().toLocaleString('th-TH', { hour12: false })]).join(' · ')],
+      [],
+      ['รายการ', 'จำนวนเงิน (บาท)'],
+      ['ยอดยกมา ปี ' + (d.fy - 1), s.carry],
+      ['รายรับจริง ปี ' + d.fy, s.income],
+      ['รวมเงินที่มี', s.available],
+      ['รายจ่ายจริง ปี ' + d.fy, s.spent],
+      ['เงินสะสมกองทุน ปี ' + d.fy, s.fund],
+      ['ภาระผูกพัน', s.commit],
+      ['เงินที่ใช้ได้จริง', s.usable]
+    ];
+    const list = a => [['รายการ', 'จำนวนเงิน (บาท)']].concat(a.map(x => [x.name, x.amount]), [['รวม', a.reduce((t, x) => t + x.amount, 0)]]);
+    const commit = [['ปีงบประมาณ', 'สถานะ', 'จำนวนเงิน (บาท)', 'หมายเหตุ']]
+      .concat(d.commit.slice().sort((a, b) => ((a.fy || 9999) - (b.fy || 9999))).map(x => [x.fy == null ? 'ไม่ระบุปี' : x.fy, x.status, x.amount, x.note || '']));
+    const sheets = [['สรุป', summary, [38, 20]], ['รายรับ', list(d.income), [60, 20]], ['รายจ่าย', list(d.expense), [60, 20]], ['ภาระผูกพัน', commit, [16, 30, 20, 40]]];
+    if (m && m.years && m.years.length) {
+      const pv = [['ปีงบประมาณ'].concat(m.statuses, ['ผลรวม'])];
+      m.years.forEach(y => pv.push([y].concat(m.statuses.map(st => m.mx[y][st] || 0), [m.yearTot[y]])));
+      pv.push(['ผลรวม'].concat(m.statuses.map(st => m.statusTot[st] || 0), [d.summary.commit]));
+      sheets.push(['ภาระผูกพันรายปี', pv, [16].concat(m.statuses.map(() => 24), [20])]);
+    }
+    return sheets;
+  }
+
+  function csvOf(rows) {
+    return rows.map(r => r.map(c => { const v = c == null ? '' : String(c); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }).join(',')).join('\r\n');
+  }
+
+  $('#btn-xlsx').addEventListener('click', () => {
+    const d = S.data;
+    if (!d) { alert('ยังไม่มีข้อมูลให้ส่งออก'); return; }
+    const sheets = buildSheets(d), base = 'Research_fund_FY' + d.fy + '_' + stamp();
+    if (typeof XLSX === 'undefined') {
+      // โหลดไลบรารี Excel ไม่ได้ -> ส่งออกเป็น CSV (เปิดใน Excel ได้ ภาษาไทยไม่เพี้ยนเพราะใส่ BOM)
+      sheets.forEach(([name, rows]) => download(new Blob(['﻿' + csvOf(rows)], { type: 'text/csv;charset=utf-8' }), base + '_' + name + '.csv'));
+      return;
+    }
+    const wb = XLSX.utils.book_new();
+    sheets.forEach(([name, rows, widths]) => {
+      const ws = XLSX.utils.aoa_to_sheet(rows);
+      ws['!cols'] = widths.map(w => ({ wch: w }));
+      Object.keys(ws).forEach(k => { if (k[0] !== '!' && ws[k].t === 'n') ws[k].z = (name === 'ภาระผูกพัน' && k[0] === 'A') ? '0' : '#,##0.00'; });
+      XLSX.utils.book_append_sheet(wb, ws, name);
+    });
+    const buf = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    download(new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), base + '.xlsx');
+  });
+})();
 
 window.__rf = S;   // ไว้ตรวจสอบตอนทดสอบ
 S.nextAt = 0;
